@@ -1,4 +1,68 @@
-<form name="calendarForm" id="calendarForm">
+//  <form action="" id="proForm" class="form-container m-auto">
+//                 <div class="form_top">
+//                     <p class="form-header">Pro</p>
+//                     <p class="close_btn" onclick="closeBtn()">X</p>
+//                 </div>
+
+//                 <div class="form-row">
+                   
+    
+//                     <DatePicker onChange={onChange} />
+//                     <div class="">
+//                         <label for="start">Start date</label>
+//                         <input type="date" name="start-date" class="form-control" required>
+//                     </div>
+//                     <div class="">
+//                         <label for="end">End date</label>
+//                         <input type="date" name="end-date" class="form-control" required>
+//                     </div>
+    
+//                     <div class="">
+//                         <p class="form-radio">Event Mode</p>
+//                         <div class="div">
+//                             <select name="mode" id="" class="form-control">
+//                                 <option value="">Select event type</option>
+//                                 <option value="physical">Physical</option>
+//                                 <option value="online">Online</option>
+//                                 <option value="hybrid">Hybrid</option>
+    
+//                             </select>
+//                         </div>
+    
+//                     </div>
+//                     <div class="">
+//                         <label for="physical">Event location</label>
+//                         <input type="text" name="address" class="form-control" placeholder="Physical location">
+//                     </div>
+//                     <div class="">
+//                         <label for="physical">Event link</label>
+//                         <input type="text" name="link" class="form-control" placeholder="Event link">
+//                     </div>
+//                     <div class="">
+//                         <label for="physical">Audience Size</label>
+//                         <input type="number" name="audience" class="form-control"
+//                             placeholder="How many persons will be in attendance">
+//                     </div>
+//                     <div class="form-group mt-3">
+//                         <label for="expectations">Expectations</label>
+//                         <textarea name="expectations" rows="5" class="form-control"
+//                             placeholder="Type here..."
+//                             required></textarea>
+//                     </div>
+//                     <div class="form-group mt-3">
+//                         <label for="others">Other Matters</label>
+//                         <textarea name="others" rows="5" class="form-control"
+//                             placeholder="Type here..."></textarea>
+//                     </div>
+//                     <div class="form-group mt-3">
+//                         <button type="submit" name="submit" class="btn btn-outline-primary rounded">Make
+//                             payment</button>
+//                     </div>
+//                 </div>
+//             </form>
+
+
+{/* <form name="calendarForm" id="calendarForm">
 <div class="form-row">
 
 
@@ -74,4 +138,6 @@
     <button type="submit" name="submit" id="schedule" class="btn btn-outline-primary rounded">Schedule</button>
 </div>
 </div>
-</form>
+</form> */}
+
+

@@ -4,12 +4,13 @@ import Scooter from "../imgs/scooter.svg"
 import Shipped from "../imgs/shipped.svg"
 import Startup from "../imgs/startup.svg"
 import axios from 'axios';
-
+import dayjs from 'dayjs'
 // import { DatePicker } from 'react-responsive-datepicker'
 // import 'react-responsive-datepicker/dist/index.css'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Button, Form, Input, InputNumber, Modal, Select, Upload, RadioChangeEvent, Radio } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, Select, Upload, RadioChangeEvent, Radio, DatePicker } from 'antd';
 import { UploadOutlined } from "@ant-design/icons";
+import moment from 'moment/moment';
 // import { calendar } from 'googleapis/build/src/apis/calendar';
 
 
@@ -17,19 +18,23 @@ function Pricing() {
     const [form] = Form.useForm();
     const { Option } = Select;
     const { TextArea } = Input;
+    const {RangePicker} = DatePicker;
+    const dateFormat = 'YYYY/MM/DD';
 
     const [loading, setLoading] = useState(false)
     const [lite, setLite] = useState(false)
     const [basic, setBasic] = useState(false)
     const [pro, setPro] = useState(false)
-    const [payment, setPayment] = useState(true)
+    const [payment, setPayment] = useState(false)
     const [schedule, setSchedule] = useState(false)
     const [copy, setCopy] = useState(false)
     const [bill, setBill] = useState('')
     const [refId, setRefId] = useState('')
     const [plan, setPlan] = useState('')
-    const [canvass, setCanvass] = useState('')
-    const [pitch, setPitch] = useState('')
+    const [canvass, setCanvass] = useState(false)
+    const [pitch, setPitch] = useState(false)
+    const [startDate, setStartDate] = useState("")
+    const [endDate, setEndDate] = useState("")
 
     const addCanvass = (e) => {
         console.log('Upload event:', e);
@@ -45,6 +50,76 @@ function Pricing() {
         form.resetFields();
       };
 
+      const checkForm = (value) => {
+
+        //     let fields = {
+        //         firstname: value.firstname,
+        //         lastname: value.lastname,
+        //         company: value.company,
+        //         canvass: value.canvass,
+        //         "canvass-upload": value.canvass_upload[0].thumbUrl,
+        //         stage: value.stage,
+        //         plan: value.plan,
+        //         expectations: value.expectations
+        //     }
+        // console.log(fields)
+        console.log(value)
+        // formShow(alues)
+      };
+
+      const liteForm = (value) => {
+        let fields = {
+            firstname: value.firstname,
+            lastname: value.lastname,
+            company: value.company,
+            canvass: value.canvass,
+            "canvass-upload": value.canvass_upload[0].thumbUrl,
+            stage: value.stage,
+            plan: value.plan,
+            expectations: value.expectations
+        }
+        // formData(fields)
+        console.log(fields)
+
+      };
+      const basicForm = (value) => {
+        let fields = {
+            firstname: value.firstname,
+            lastname: value.lastname,
+            company: value.company,
+            canvass: value.canvass,
+            "canvass-upload": value.canvass_upload,
+            pitch: value.pitch,
+            "pitch-upload": value.pitch_upload,
+            stage: value.stage,
+            plan: value.plan,
+            expectations: value.expectations
+        }
+        // formData(fields)
+        console.log(fields)
+
+      };
+      const proForm = (value) => {
+        let fields = {
+            firstname: value.firstname,
+            lastname: value.lastname,
+            company: value.company,
+            audience: value.audience,
+            mode: value.mode,
+            address: value.address,
+            link: value.link,
+            "start-date": startDate,
+            "end-date": endDate,
+            stage: value.stage,
+            plan: value.plan,
+            expectations: value.expectations,
+            others: value.others
+
+        }
+        // formData(fields)
+        console.log(fields)
+      };
+
     const formData = async (fields) => {
         try {
             setLoading(true);
@@ -57,16 +132,7 @@ function Pricing() {
                 {
                     // POST the data
                     fields
-                //   "fields":  fields.plan === "lite" && {
-                //     "plan": fields.plan,
-                //     "company": fields.company,
-                //     "firstname": fields.firstname,
-                //     "lastname": fields.lastname,
-                //     "canvass": fields.canvass,
-                //     "stage": fields.stage,
-                //     "expectations": fields.expectations,
-                //     "canvass-upload": fields.canvass_upload ? fields.canvass_upload[0] : []
-                //   }
+              
                 }, { headers: headers_ }
             )
                 .then((resp) => {
@@ -192,7 +258,8 @@ console.log('first')
                     form={form}
                     initialValues={{ plan:'lite' }}
                     name="lite"
-                    onFinish={formData}
+                    // onFinish={checkForm}
+                    onFinish={liteForm}
                     layout="vertical"
                     style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
                 >
@@ -245,21 +312,21 @@ console.log('first')
                             <Option value="Hackathon/Ideathon">Post Revenue</Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item name="canvass">
+                    <Form.Item name="canvass" initialValue='yes'>
                         <Radio.Group
                             className="radio_button"
+                            defaultValue="yes"
                             onChange={(e: RadioChangeEvent) => {
-                                setCanvass(e.target.value)
+                               e.target.value === "yes"  ? setCanvass(false) :  setCanvass(true)
                             }}
                             value={canvass}
                         >
-                            <Radio value="no" >No</Radio>
                             <Radio value="yes">Yes</Radio>
+                            <Radio value="no" >No</Radio>
                         </Radio.Group>
                     </Form.Item>
 
-                    {canvass ?
-                        <Form.Item
+                       <Form.Item
                             name="canvass_upload"
                             valuePropName="fileList"
                             getValueFromEvent={addCanvass}
@@ -267,21 +334,16 @@ console.log('first')
                         >
                             <Upload name="canvass_upload"
                                 listType="picture"
+                                
                                 multiple>
-                                <Button>Upload canvass</Button>
+                                <Button
+                                disabled={canvass}
+                                >Upload canvass</Button>
                             </Upload>
-                        </Form.Item> :
-                        ""
-                    }
+                        </Form.Item>
                     <Form.Item name="expectations"
-                        style={{ gridColumn: '1/3' }}
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please enter first name",
-                            },
-                        ]}>
-                        <TextArea rows={4} placeholder="maxLength is 6" maxLength={6} />
+                    label="Expectations"  style={{ gridColumn: '1/3' }}>
+                        <TextArea rows={4} placeholder="What are your expectations" maxLength={6} />
                     </Form.Item>
 
 
@@ -330,7 +392,8 @@ console.log('first')
                     form={form}
                     initialValues={{ plan:'basic' }}
                     name="basic"
-                    onFinish={formData}
+                    // onFinish={formData}
+                    onFinish={basicForm}
                     layout="vertical"
                     style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
                 >
@@ -383,35 +446,22 @@ console.log('first')
                             <Option value="Hackathon/Ideathon">Post Revenue</Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item name="canvass"
+                    <Form.Item name="canvass" initialValue='yes'
                       label="Upload Business Model Canvass"
                       >
                         <Radio.Group
                             className="radio_button"
+                            defaultValue='yes'
                             onChange={(e: RadioChangeEvent) => {
-                                setCanvass(e.target.value)
+                                // setCanvass(e.target.value)
+                                e.target.value === "yes" ? setCanvass(false) :  setCanvass(true)
                             }}
                             value={canvass}
                         >
-                            <Radio value="no" >No</Radio>
                             <Radio value="yes">Yes</Radio>
+                            <Radio value="no" >No</Radio>
                         </Radio.Group>
                     </Form.Item>
-
-                     <Form.Item name="pitch" label="Do you have a pitch deck?">
-                        <Radio.Group
-                            className="radio_button"
-                            onChange={(e: RadioChangeEvent) => {
-                                setPitch(e.target.value)
-                            }}
-                            value={pitch}
-                        >
-                            <Radio value="no" >No</Radio>
-                            <Radio value="yes">Yes</Radio>
-                        </Radio.Group>
-                    </Form.Item>
-
-                    {canvass === "yes" &&
                         <Form.Item
                             name="canvass-upload"
                             valuePropName="fileList"
@@ -420,33 +470,45 @@ console.log('first')
                         >
                             <Upload name="canvass-upload"
                                 listType="picture"
-                                multiple>
-                                <Button>Upload canvass</Button>
+                           
+                            multiple>
+                                <Button
+                                disabled={canvass}>Upload canvass</Button>
+                                
                             </Upload>
                         </Form.Item>
-                    }
-                    {pitch === "yes" &&
+                    
+                        <Form.Item name="pitch" initialValue='yes'
+                         label="Do you have a pitch deck?">
+                        <Radio.Group
+                            className="radio_button"
+                            defaultValue='yes'
+                            onChange={(e: RadioChangeEvent) => {
+                                e.target.value === "yes" ?  setPitch(false) :  setPitch(true)
+                            }}
+                            value={pitch}
+                        >
+                            <Radio value="yes">Yes</Radio>
+                            <Radio value="no" >No</Radio>
+                        </Radio.Group>
+                    </Form.Item>
+
                         <Form.Item
                             name="pitch-upload"
                             valuePropName="fileList"
                             getValueFromEvent={addCanvass}
                             label="Upload Pitch Deck"
-                        >
+                            >
                             <Upload name="pitch-upload"
                                 listType="picture"
                                 multiple>
-                                <Button>Upload Pitch</Button>
+                                <Button
+                                disabled={pitch}>Upload Pitch</Button>
                             </Upload>
-                        </Form.Item> }
-                    <Form.Item name="expectations"
-                        style={{ gridColumn: '1/3' }}
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please enter first name",
-                            },
-                        ]}>
-                        <TextArea rows={4} placeholder="maxLength is 6" maxLength={6} />
+                        </Form.Item> 
+                        <Form.Item name="expectations"
+                    label="Expectations"  style={{ gridColumn: '1/3' }}>
+                        <TextArea rows={4} placeholder="What are your expectations" maxLength={6} />
                     </Form.Item>
 
 
@@ -490,76 +552,143 @@ console.log('first')
                 width={"800px"}
                 footer={null}
             >
-                <Form
+                  <Form
                     form={form}
                     initialValues={{ plan:'pro' }}
                     name="pro"
-                    onFinish={formData}
+                    onFinish={proForm}
+                    // onFinish={formData}
                     layout="vertical"
                     style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
                 >
 
-                    <Form.Item name="plan"  style={{ display: 'none'}}>
+                    <Form.Item name="plan" style={{ display: 'none'}} >
                         <Input />
                     </Form.Item>
 
-                    <Form.Item name="type" label="Type"
-                        initialValue='{coupon.type}'>
-                        <Select
-                            placeholder="Type"
-                        >
-                            <Option value="percentage">Percentage</Option>
-                            <Option value="amount">Amount</Option>
-                        </Select>
-                    </Form.Item>
-
-                    <Form.Item name="min_amount" label="Minimum amount"
-                    // rules={[
-                    //   {
-                    //     required: true,
-                    //     message: "Please enter a minimum amount!",
-                    //   },
-                    // ]}
-                    >
-                        <InputNumber
-                            placeholder='{coupon.min_amount}'
+                    <Form.Item name="firstname" label="First name"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter first name",
+                            },
+                        ]}>
+                        <Input
+                            placeholder='Enter first name'
                             className="inputWidthFull"
-                            label="Minimum amount"
                         />
                     </Form.Item>
 
-                    <Form.Item name="status" label="Status"
-                    // rules={[
-                    //   {
-                    //     required: true,
-                    //     message: "Select a status!",
-                    //   },
-                    // ]}
-                    >
-                        <Select
-                            // placeholder="Status"
-                            defaultValue='{coupon.status}'
-                        >
-                            <Option value="active">Activate</Option>
-                            <Option value="disabled">Deactivate</Option>
+                    <Form.Item name="lastname" label="Last name"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter last name",
+                            },
+                        ]}>
+                        <Input
+                            placeholder='Enter last name'
+                            className="inputWidthFull"
+                        />
+                    </Form.Item>
+
+                    <Form.Item name="company" label="Company Name (Optional)">
+                        <Input
+                            placeholder='Enter company Name'
+                            className="inputWidthFull"
+                        />
+                    </Form.Item>
+
+
+                    <Form.Item name="event-type" label="Event Type"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please select the event type"
+                            }
+                           ]}>
+                            <Select
+                                placeholder='Select event type'
+                            >
+                            <Option value="Bootcamp">Bootcamp</Option>
+                            <Option value="Incubator/Accelerator">Incubator/Acceleratore</Option>
+                            <Option value="Hackathon/Ideathon">Hackathon/Ideathon</Option>
+                            <Option value="Training/Workshops">Training/Workshops</Option>
+                            <Option value="Seminars/Conference">Seminars/Conference</Option>
                         </Select>
                     </Form.Item>
 
-                    {/* <Form.Item name="categories" label="Categories" >
 
-              <Select
-                mode="multiple"
-                placeholder="Choose category"
-                defaultValue={category && category.map((item) => {
-                  return item.id
-                })}
-              >
-                {categories && categories.map((category, index) => (
-                  <Option key={index} value={category.id}>{category.name}</Option>
-                ))}
-              </Select>
-            </Form.Item> */}
+                    <Form.Item name="start_date"
+                      label="Start date"
+                      rules={[
+                        {
+                            required: true,
+                            message: "What's the start date",
+                        },
+                    ]}
+                      >
+                        <DatePicker  onChange={e => setStartDate(moment(e).format(
+                            "MMM D, YYYY"
+                          ))} />
+                    </Form.Item>
+                    <Form.Item name="end_date"
+                      label="End date"
+                      rules={[
+                        {
+                            required: true,
+                            message: "What's the end date",
+                        },
+                    ]}
+                      >
+                        <DatePicker onChange={e => setEndDate(moment(e).format(
+                            "MMM D, YYYY"
+                          ))} />
+                    </Form.Item>
 
+                    <Form.Item name="mode" label="Event Mode"
+                       rules={[
+                        {
+                            required: true,
+                            message: "Please select the event mode"
+                        }
+                       ]}>
+                        <Select
+                            placeholder='Select event mode'
+                        >
+                            <Option value="hybrid">Hybrid</Option>
+                            <Option value="physical">Physical</Option>
+                            <Option value="online">Online</Option>
+                        </Select>
+                    </Form.Item>
+
+                    <Form.Item name="audience" label="Number of participants">
+                    <InputNumber min={1} max={99999} defaultValue={10} />
+                    </Form.Item>
+
+                    <Form.Item name="address" label="Enter address">
+                        <Input
+                            placeholder='Address'
+                            className="inputWidthFull"
+                        />
+                    </Form.Item>
+
+                    <Form.Item name="link" label="Event Url">
+                        <Input
+                            placeholder='www.example.com'
+                            className="inputWidthFull"
+                        />
+                    </Form.Item>
+
+
+                        <Form.Item name="expectations"
+                    label="Expectations"  style={{ gridColumn: '1/3' }}>
+                        <TextArea rows={6} placeholder="What are your expectations" maxLength={6} />
+                    </Form.Item>
+                    <Form.Item name="others"
+                    label="Others"  style={{ gridColumn: '1/3' }}>
+                        <TextArea rows={6} placeholder="Other expectations" maxLength={6} />
+                    </Form.Item>
 
 
 
@@ -571,7 +700,7 @@ console.log('first')
                             type="primary"
                         //     onClick={() => {
                         //         onReset()
-                        //       setPro(false)
+                        //       setBasic(false)
                         //   }}
                         >
                             Make Payment
@@ -581,7 +710,7 @@ console.log('first')
                             type="primary"
                             onClick={() => {
                                   onReset()
-                                setPro(false)
+                                setBasic(false)
                             }}
                         >
                             Close
@@ -675,22 +804,7 @@ console.log('first')
                         />
                     </Form.Item>
 
-                    <Form.Item name="status" label="Status"
-                    // rules={[
-                    //   {
-                    //     required: true,
-                    //     message: "Select a status!",
-                    //   },
-                    // ]}
-                    >
-                        <Select
-                            // placeholder="Status"
-                            defaultValue='{coupon.status}'
-                        >
-                            <Option value="active">Activate</Option>
-                            <Option value="disabled">Deactivate</Option>
-                        </Select>
-                    </Form.Item>
+                 
 
 {/* <DatePicker
         isOpen={schedule}
