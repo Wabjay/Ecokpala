@@ -5,8 +5,8 @@ import Shipped from "../imgs/shipped.svg"
 import Startup from "../imgs/startup.svg"
 import axios from 'axios';
 
-import { DatePicker } from 'react-responsive-datepicker'
-import 'react-responsive-datepicker/dist/index.css'
+// import { DatePicker } from 'react-responsive-datepicker'
+// import 'react-responsive-datepicker/dist/index.css'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Button, Form, Input, InputNumber, Modal, Select, Upload, RadioChangeEvent, Radio } from 'antd';
 import { UploadOutlined } from "@ant-design/icons";
@@ -747,14 +747,14 @@ calendar.events.insert({
                     </div>
                 </div>
                 </form> */}
-                <DatePicker
+                {/* <DatePicker
         isOpen={schedule}
         // onClose={() => setIsOpen(false)}
         defaultValue={new Date(2022, 8, 8)}
         minDate={new Date(2022, 10, 10)}
         maxDate={new Date(2023, 0, 10)}
         headerFormat='DD, MM dd'
-      />
+      /> */}
                  <Button
                             loading={loading}
                             htmlType="submit"
