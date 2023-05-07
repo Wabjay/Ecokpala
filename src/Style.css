@@ -1,0 +1,168 @@
+/* .forms{
+    width: 100vw;
+    height: 100vh;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.25);
+    position: fixed;
+    top: 0;
+} */
+/* #lite-form, #basic-form,  #pro-form {
+    background-color: white;
+    border-radius: 20px;
+    padding: 40px;
+    display: none;
+} */
+.embed{
+    width: 500px;
+    height: 330px;
+    margin: 20px auto;
+    border: 0.5px solid #695aa6;
+    /* border-radius: 20px; */
+}
+.zcEmcnt{
+    border: inherit !important;
+    border-radius: 20px;
+}
+/* #lite-form{
+    display: block;
+} */
+
+
+
+.form_top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.form-header{
+    font-weight: 500;
+    font-family: 'Baloo Paaji', cursive;
+    color: #695aa6;
+    font-size: 32px;
+    display: inline;
+}
+.accountText{
+    font-weight: 400;
+    font-family: 'Baloo Paaji', cursive;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+.accountText > span{
+    font-weight: 400;
+    font-family: 'Baloo Paaji', cursive;
+    color: #695aa6;
+    font-size: 16px;
+    text-transform: uppercase;
+    display: block;
+}
+.close_btn{
+    display: inline;
+    margin-left: auto;
+    margin-right: 20px;
+    color: #695aa6;
+    font-size: 20px;
+    font-weight: bolder;
+    cursor: pointer;
+    border: solid 1px #695aa6;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+.form-control{
+    height: fit-content;
+    border: 0.5px solid #ced4da;
+}
+
+#lite-form, #basic-form,  #pro-form, #calendar, #payment-form  {
+    display: none;
+    position: absolute;
+    top: 0;
+    padding: 100px 0;
+    width: 100%;
+    height: fit-content;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.25);
+    justify-content: center;
+    align-items: center;
+    scroll-behavior: auto;
+ }
+   /* #lite-form */
+  /* #basic-form */
+  /* #pro-form, */
+  /* #payment-form, */
+   /* #calendar, */
+ .show{
+    display: flex;
+ }
+
+#lite-form > form, #basic-form > form,  #pro-form > form,  #payment-form .form-row, #calendar > form {
+    width: 90%;
+    max-width: fit-content;
+    height: fit-content;
+    position: relative;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: white;
+    border-radius: 16px;
+ }
+
+ #lite-form .form-row, #basic-form .form-row, #pro-form .form-row, #payment-form .form-row, #calendar .form-row{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.form-row > div{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+ .form-radio{
+    font-family: "Open Sans", sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    margin-bottom: 0.5rem;
+ }
+
+ /* .input-radio{
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 90%;
+ } */
+
+ .input-radio label{
+    margin-bottom: 0;
+ }
+ .btn{
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+ }
+
+ @media (min-width: 576px) {
+    .input-radio{
+        display: grid;
+        grid-template-columns: auto auto auto;
+        justify-content: space-between;
+        width: fit-content;
+        grid-gap: 10px;
+     }
+ }
+ @media (min-width: 1024px) {
+    #lite-form .form-row, #basic-form .form-row, #pro-form .form-row{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 6%;
+    }
+    .accountText > span{
+        display: inline;
+        margin-left: 10px;
+    }
+ }
