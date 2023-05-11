@@ -154,6 +154,10 @@
         width: fit-content;
         grid-gap: 10px;
      }
+     .accountText > span{
+        display: inline;
+        margin-left: 10px;
+    }
  }
  @media (min-width: 1024px) {
     #lite-form .form-row, #basic-form .form-row, #pro-form .form-row{
@@ -161,8 +165,5 @@
         grid-template-columns: 1fr 1fr;
         grid-column-gap: 6%;
     }
-    .accountText > span{
-        display: inline;
-        margin-left: 10px;
-    }
+   
  }

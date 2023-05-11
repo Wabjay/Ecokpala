@@ -1,20 +1,18 @@
-import React, { useState } from 'react'
+// import 'whatwg-fetch';
+import React, { useEffect, useState } from 'react'
 import '../App.css';
 import Scooter from "../imgs/scooter.svg"
 import Shipped from "../imgs/shipped.svg"
 import Startup from "../imgs/startup.svg"
 import axios from 'axios';
-import dayjs from 'dayjs'
-// import { DatePicker } from 'react-responsive-datepicker'
-// import 'react-responsive-datepicker/dist/index.css'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Button, Form, Input, InputNumber, Modal, Select, Upload, RadioChangeEvent, Radio, DatePicker } from 'antd';
 import { UploadOutlined } from "@ant-design/icons";
 import moment from 'moment/moment';
-// import { calendar } from 'googleapis/build/src/apis/calendar';
 
 
-function Pricing() {
+
+function Pricing(props) {
     const [form] = Form.useForm();
     const { Option } = Select;
     const { TextArea } = Input;
@@ -36,20 +34,86 @@ function Pricing() {
     const [pitch, setPitch] = useState(false)
     const [startDate, setStartDate] = useState("")
     const [endDate, setEndDate] = useState("")
+    const [name, setName] = useState("")
 
-    const addCanvass = (e) => {
-        console.log('Upload event:', e);
+    // SCRIPT TO UPLOAD IMAGE TO CLOUDINARY
+    const [uploadCanvassFile, setUploadCanvassFile] = useState("");
+    const [canvassUpload, setCanvassUpload] = useState("")
+    const [pitchUpload, setPitchUpload] = useState("")
+    const [uploadPitchFile, setUploadPitchFile] = useState("");
 
-        if (Array.isArray(e)) {
-            return e;
-        }
 
-        return e?.fileList;
-    };
+    
+    useEffect(() => {
+        const formData = new FormData();
+        formData.append("file", uploadPitchFile);
+        formData.append("upload_preset", "ecokpala");
+
+        axios.post(
+            "https://api.cloudinary.com/v1_1/degoanwyh/image/upload",
+            formData
+        )
+            .then((response) => {
+                console.log(response.data.secure_url);
+                setPitchUpload(response.data.secure_url);
+                return response.data.secure_url;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        
+    }, [uploadPitchFile !== ""])
+
+    useEffect(() => {
+        const formData = new FormData();
+        formData.append("file", uploadCanvassFile);
+        formData.append("upload_preset", "ecokpala");
+
+        axios.post(
+            "https://api.cloudinary.com/v1_1/degoanwyh/image/upload",
+            formData
+        )
+            .then((response) => {
+                console.log(response.data.secure_url);
+                setCanvassUpload(response.data.secure_url);
+                return response.data.secure_url;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        
+    }, [uploadCanvassFile !== ""])
+
+
+    // const addPitch = (e) => {
+    //     console.log(e)
+    //     const formData = new FormData();
+    //     formData.append("file", e);
+    //     formData.append("upload_preset", "ecokpala");
+
+    //     axios.post(
+    //         "https://api.cloudinary.com/v1_1/degoanwyh/image/upload",
+    //         formData
+    //     )
+    //         .then((response) => {
+    //             console.log(response.data.secure_url);
+    //             // setCloudinaryImage(response.data.secure_url);
+    //             return response.data.secure_url;
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+        
+    // };
 
     const onReset = () => {
         form.resetFields();
     };
+    const handleErrors = (response) => {
+        if (!response.ok)
+            throw Error(response.statusText);
+        return response;
+    }
 
     const checkForm = (value) => {
 
@@ -68,52 +132,54 @@ function Pricing() {
         // formShow(alues)
     };
 
-    const liteForm = (value) => {
-        setFields({
+    const liteForm = (value) => { 
+        let fields = {
             firstname: value.firstname,
             lastname: value.lastname,
             company: value.company,
             canvass: value.canvass,
-            "canvass-upload": value.canvass_upload[0].thumbUrl,
+            "canvass-upload": canvassUpload ? canvassUpload : '',
             stage: value.stage,
             plan: value.plan,
             expectations: value.expectations
-        })
-        setPayment(true)
-        // formData(fields)
+        }
+        formData(fields)
         console.log(fields)
-        setRefId(fields.plan + fields.company + Math.floor(Math.random() * 999))
+        let referenceID = fields.plan + fields.company + Math.floor(Math.random() * 999)
+        setRefId(referenceID)
+        // setPayment(true)
         setLite(false)
         setBill(30)
         console.log(fields)
         setPlan(fields.plan)
-
+        setName(`${fields.firstname} ${fields.lastname}`)
     };
     const basicForm = (value) => {
-        setFields({
+        let fields = {
             firstname: value.firstname,
             lastname: value.lastname,
             company: value.company,
             canvass: value.canvass,
-            "canvass-upload": value.canvass_upload,
+            "canvass-upload": canvassUpload ? canvassUpload : '',
             pitch: value.pitch,
-            "pitch-upload": value.pitch_upload,
+            "pitch-upload": pitchUpload ? pitchUpload : '',
             stage: value.stage,
             plan: value.plan,
-            expectations: value.expectations
-        })
-        // formData(fields)
-        setPayment(true)
+            expectations: value.expectations,
+        }
+        formData(fields)
+        // setPayment(true)
         console.log(fields)
-        setRefId(fields.plan + fields.company + Math.floor(Math.random() * 999))
+        let referenceID = fields.plan + fields.company + Math.floor(Math.random() * 999)
+        setRefId(referenceID)
         setBasic(false)
         setBill(80)
         console.log(fields)
         setPlan(fields.plan)
-
+        setName(`${fields.firstname} ${fields.lastname}`)
     };
     const proForm = (value) => {
-        setFields({
+        let fields = {
             firstname: value.firstname,
             lastname: value.lastname,
             company: value.company,
@@ -128,15 +194,17 @@ function Pricing() {
             expectations: value.expectations,
             others: value.others
 
-        })
-        // formData(fields)
+        }
+        formData(fields)
         console.log(fields)
-        setPayment(true)
-        setRefId(fields.plan + fields.company + Math.floor(Math.random() * 999))
+        // setPayment(true)
+        let referenceID = fields.plan + fields.company + Math.floor(Math.random() * 999)
+        setRefId(referenceID)
         setPro(false)
         setBill(1500)
         console.log(fields)
         setPlan(fields.plan)
+        setName(`${fields.firstname} ${fields.lastname}`)
     };
 
     const formData = async (fields) => {
@@ -158,7 +226,7 @@ function Pricing() {
                     console.log("success!")
                     setPayment(true)
                     onReset()
-                    setRefId(fields.plan + fields.company + Math.floor(Math.random() * 999))
+                        // setRefId(fields.plan + fields.company + Math.floor(Math.random() * 999))
                         (fields.plan === "lite" ? (setLite(false), setBill(30)) :
                             fields.plan === "basic" ? (setBasic(false), setBill(80)) :
                                 (setPro(false), setBill(1500)))
@@ -178,8 +246,42 @@ function Pricing() {
         }
     }
     // Calendar
-    const calendarData = () => {
-        console.log('first')
+
+    const calendarData = async (value) => {
+        try {
+            setLoading(true);
+
+            const headers_ = {
+                Authorization: 'Bearer ya29.a0AWY7CknPzzvLpOgWa3Nd9EOGyRyyCHOMI2_sG41j2AGY2VMw2Fc9qkQUpF-F3KO90fVLfF1tqQ5yAs-lPWh_Uzb_7MjjyVYKrojhVZOcm-VuRt2CawX6RW0JV1i7N8ghBjoPfCTLaKDU7Fo2-oWM0Zqny2RibQaCgYKAQkSARMSFQG1tDrpAdsdUD5SaxrERhxRk0O-_A0165',
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            };
+            axios.post("https://www.googleapis.com/calendar/v3/calendars/159d66ab8b0100f347b9fdc90e62f092bc8005f0e7feed7c0c5bbca647a29543@group.calendar.google.com/events",
+                {
+                    start: {
+                        dateTime: value.startDate,
+                        timeZone: "Africa/Lagos"
+                    },
+                    end: {
+                        dateTime: value.endDate,
+                        timeZone: "Africa/Lagos"
+                    },
+                    attendees: [{email: value.email}],
+                    reference_ID: value.refId,
+                    title: value.title,
+                    name: value.name
+                }, { headers: headers_ }
+            )
+                .then((resp) => {
+                                onReset()
+                                setSchedule(false)
+                }).catch((error) => {
+                    return handleErrors(error);
+                })
+        } finally {
+            setLoading(false);
+
+        }
     };
 
     //   End calendar
@@ -187,6 +289,7 @@ function Pricing() {
 
     return (
         <section className="section" id="pricing">
+
             <div className="container text-center">
                 <p className="section-subtitle">How Much I Charge ?</p>
                 <h6 className="section-title mb-6">My Pricing</h6>
@@ -281,7 +384,8 @@ function Pricing() {
                     // onFinish={checkForm}
                     onFinish={liteForm}
                     layout="vertical"
-                    style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
+                    className='formGrid'
+                    // style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
                 >
 
                     <Form.Item name="plan" style={{ display: 'none' }}>
@@ -332,7 +436,8 @@ function Pricing() {
                             <Option value="Hackathon/Ideathon">Post Revenue</Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item name="canvass" initialValue='yes'>
+                    <Form.Item name="canvass" initialValue='yes'
+                      label="Do you have Business Model Canvass">
                         <Radio.Group
                             className="radio_button"
                             defaultValue="yes"
@@ -345,25 +450,19 @@ function Pricing() {
                             <Radio value="no" >No</Radio>
                         </Radio.Group>
                     </Form.Item>
+                    <div  className='uploadInput'>   
+                    <p className='textLabel'>Upload Business Model Canvass</p>
+                    <input type="file"
+                     disabled={canvass}
 
-                    <Form.Item
-                        name="canvass_upload"
-                        valuePropName="fileList"
-                        getValueFromEvent={addCanvass}
-                        label="Upload Business Model Canvass"
-                    >
-                        <Upload name="canvass_upload"
-                            listType="picture"
-
-                            multiple>
-                            <Button
-                                disabled={canvass}
-                            >Upload canvass</Button>
-                        </Upload>
-                    </Form.Item>
+                            onChange={(event) => (setUploadCanvassFile(event.target.files[0])
+                                )}
+                        />
+                        </div>
+                   
                     <Form.Item name="expectations"
                         label="Expectations" style={{ gridColumn: '1/3' }}>
-                        <TextArea rows={4} placeholder="What are your expectations" maxLength={6} />
+                        <TextArea rows={4} placeholder="What are your expectations" />
                     </Form.Item>
 
 
@@ -374,10 +473,7 @@ function Pricing() {
                             htmlType="submit"
                             className="mt-2"
                             type="primary"
-                        //     onClick={() => {
-                        //         onReset()
-                        //       setLite(false)
-                        //   }}
+                      
                         >
 
                             Make Payment
@@ -416,7 +512,8 @@ function Pricing() {
                     // onFinish={formData}
                     onFinish={basicForm}
                     layout="vertical"
-                    style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
+                    className='formGrid'
+                    // style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
                 >
 
                     <Form.Item name="plan" style={{ display: 'none' }} >
@@ -468,7 +565,7 @@ function Pricing() {
                         </Select>
                     </Form.Item>
                     <Form.Item name="canvass" initialValue='yes'
-                        label="Upload Business Model Canvass"
+                        label="Do you have Business Model Canvass"
                     >
                         <Radio.Group
                             className="radio_button"
@@ -483,21 +580,15 @@ function Pricing() {
                             <Radio value="no" >No</Radio>
                         </Radio.Group>
                     </Form.Item>
-                    <Form.Item
-                        name="canvass-upload"
-                        valuePropName="fileList"
-                        getValueFromEvent={addCanvass}
-                        label="Do you have a Business Model Canvass?"
-                    >
-                        <Upload name="canvass-upload"
-                            listType="picture"
 
-                            multiple>
-                            <Button
-                                disabled={canvass}>Upload canvass</Button>
-
-                        </Upload>
-                    </Form.Item>
+                    <div className='uploadInput'>   
+                    <p className='textLabel'>Upload Business Model Canvass</p>
+                     <input type="file"
+                     disabled={canvass}
+                            onChange={(event) => (setUploadCanvassFile(event.target.files[0])
+                                )}
+                        />
+                        </div>
 
                     <Form.Item name="pitch" initialValue='yes'
                         label="Do you have a pitch deck?">
@@ -513,20 +604,15 @@ function Pricing() {
                             <Radio value="no" >No</Radio>
                         </Radio.Group>
                     </Form.Item>
+                    <div className='uploadInput'>   
+                    <p className='textLabel'> Upload pitch deck</p>
+                    <input type="file"
+                     disabled={canvass}
+                            onChange={(event) => (setUploadPitchFile(event.target.files[0])
+                                )}
+                        />
+</div>
 
-                    <Form.Item
-                        name="pitch-upload"
-                        valuePropName="fileList"
-                        getValueFromEvent={addCanvass}
-                        label="Upload Pitch Deck"
-                    >
-                        <Upload name="pitch-upload"
-                            listType="picture"
-                            multiple>
-                            <Button
-                                disabled={pitch}>Upload Pitch</Button>
-                        </Upload>
-                    </Form.Item>
                     <Form.Item name="expectations"
                         label="Expectations" style={{ gridColumn: '1/3' }}>
                         <TextArea rows={4} placeholder="What are your expectations" maxLength={6} />
@@ -581,7 +667,8 @@ function Pricing() {
                     onFinish={proForm}
                     // onFinish={formData}
                     layout="vertical"
-                    style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
+                    className='formGrid'
+                    // style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
                 >
 
                     <Form.Item name="plan" style={{ display: 'none' }} >
@@ -705,11 +792,11 @@ function Pricing() {
 
                     <Form.Item name="expectations"
                         label="Expectations" style={{ gridColumn: '1/3' }}>
-                        <TextArea rows={6} placeholder="What are your expectations" maxLength={6} />
+                        <TextArea rows={6} placeholder="What are your expectations" />
                     </Form.Item>
                     <Form.Item name="others"
                         label="Others" style={{ gridColumn: '1/3' }}>
-                        <TextArea rows={6} placeholder="Other expectations" maxLength={6} />
+                        <TextArea rows={6} placeholder="Other expectations" />
                     </Form.Item>
 
 
@@ -749,14 +836,15 @@ function Pricing() {
                 open={payment}
                 width={"800px"}
                 footer={null}
+                onCancel={()=>setPayment(false)}
             >
                 <div class="">
                     <p class="form-header" style={{ textTransform: "Capitalize" }} id="payment-title">{plan} Plan</p>
-                    <p class="notes">Please make a payment of <span>${bill}</span> to the following account with the reference number below as description for the payment.</p>
+                    <p class="notes">Please make a payment of <span style={{fontWeight: "700"}}>${bill}</span> to the following account with the reference number below as description for the payment.</p>
                     <p class="accountText">Account number: <span>20937937947</span></p>
                     <p class="accountText">Account name: <span>Jimoh abdulwahab</span></p>
                     <p class="accountText">Reference number: <span style={{ marginRight: '20px' }}>{refId}</span>
-                        <CopyToClipboard text={refId ? refId : "RefNumbe"} onCopy={() => setCopy(true)}><button className='copyToClip'>Copy</button></CopyToClipboard>
+                        <CopyToClipboard text={refId ? refId : "RefNumber"} onCopy={() => setCopy(true)}><button className='copyToClip'>Copy</button></CopyToClipboard>
                     </p>
                 </div>
                 <Button
@@ -781,41 +869,59 @@ function Pricing() {
             </Modal>
 
             {/* Schedule meeting */}
+
+
             <Modal
-                title="Payment Instruction"
+                title='Schedule'
                 centered
+                // open={Props.info?.schedule}
                 open={schedule}
-                width={"500px"}
+                width={"fit-content"}
                 footer={null}
+                onCancel={()=>setSchedule(false)}
+
             >
-                <div>
-                    <p class="form-header" style={{ textTransform: "Capitalize" }} id="payment-title">Payment details</p>
-                    <p class="notes">Please make a payment of <span>${bill}</span> to the following account with the reference number below as description for the payment.</p>
-                    <p class="accountText">{plan}</p>
-                    <p class="accountText">Name: <span>{fields.firstname} {fields.lastname}</span></p>
-                    <p class="accountText">Amount paid: <span>${bill}</span></p>
-                    <p class="accountText">Reference number: <span style={{ marginRight: '20px' }}>{refId}</span></p>
-                </div>
+                {/* <AddCal /> */}
+
                 <Form
                     form={form}
-                    initialValues={{
-                        referenceNumber: refId,
-                        name: fields.firstname + fields.lastname,
-                        paid: bill,
-                        plan: plan
-                    }}
-                    name="lite"
-                    onFinish={checkForm}
-                    // onFinish={liteForm}  
+                    initialValues={{refId: refId, name: name}}
+                    // name="calendar"
+                    onFinish={calendarData}
                     layout="vertical"
-                    style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
+                    className='formGrid'
+                    // style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
                 >
 
-                    <Form.Item name="plan" style={{ display: 'none' }}>
-                        <Input />
+
+                    <Form.Item name="name" label="Fullname"
+                    initialValue={name}
+                    >
+                        <Input
+                            disabled = {true}
+                            className="inputWidthFull"
+                        />
                     </Form.Item>
 
-                    <Form.Item name="start_date"
+                    <Form.Item name="refId" label="Reference ID"
+                    initialValue={refId}
+                    >
+                        <Input
+                        disabled = {true}
+                            // placeholder='Enter title'
+                            className="inputWidthFull"
+                        />
+                    </Form.Item>
+
+                    <Form.Item style={{ gridColumn: '1/3' }}
+                     name="email" label="Email address">
+                        <Input
+                            placeholder='Email address'
+                            className="inputWidthFull"
+                        />
+                    </Form.Item>
+
+                    <Form.Item name="startDate"
                         label="Start date"
                         rules={[
                             {
@@ -824,13 +930,9 @@ function Pricing() {
                             },
                         ]}
                     >
-                        <DatePicker
-                        className="inputWidthFull"
-                        onChange={e => setStartDate(moment(e).format(
-                            "MMM D, YYYY"
-                        ))} />
+                        <DatePicker />
                     </Form.Item>
-                    <Form.Item name="end_date"
+                    <Form.Item name="endDate"
                         label="End date"
                         rules={[
                             {
@@ -839,128 +941,37 @@ function Pricing() {
                             },
                         ]}
                     >
-                        <DatePicker
-                        className="inputWidthFull"
-                        onChange={e => setEndDate(moment(e).format(
-                            "MMM D, YYYY"
-                        ))} />
+                        <DatePicker />
                     </Form.Item>
-                    <Form.Item name="email"
-                        label="Enter your email"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Enter your email",
-                            },
-                        ]}
-                        style={{ gridColumn: '1/3' }}>
-                       <Input name='email' 
-                       placeholder='myemail@email.com'
-                       />
-                    </Form.Item>
-               
 
 
 
                     <Form.Item style={{ gridColumn: '1/3' }}>
-                  <Button
-                    loading={loading}
-                    htmlType="submit"
-                    className="mt-2"
-                    type="primary"
-                    onClick={() => {
-                        setPayment(false)
-                        setSchedule(true)
-                    }}
-                >
-                    Schedule date
-                </Button>
-                <Button
-                    className="mt-2 mx-3"
-                    type="primary"
-                    onClick={() => setPayment(false)}
-                >
-                    Close
-                </Button>
+                        <Button
+                            loading={loading}
+                            htmlType="submit"
+                            className="mt-2"
+                            type="primary"
+                        >
+
+                            Schedule
+                        </Button>
+                        {/* <Button
+                            className="mt-2 mx-3"
+                            type="primary"
+                            onClick={() => {
+                                onReset()
+                                setSchedule(false)
+                            }}
+                        >
+                            Cancel
+                        </Button> */}
                     </Form.Item >
 
                 </Form>
-               
+
+
             </Modal>
-
-            {/* <Modal
-                title='Schedule'
-                centered
-                open={schedule}
-                width={"800px"}
-                footer={null}
-            >
-                  
-                <Form
-                    form={form}
-                    initialValues={{
-                        referenceNumber: refId,
-                        name: fields.firstname + fields.lastname,
-                        paid: bill,
-                        plan: plan
-                    }}
-                    name="calendar"
-                    onFinish={calendarData}
-                    layout="vertical"
-                    style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
-                >
-                    
-                    <Form.Item name="start_date"
-                        label="Start date"
-                        rules={[
-                            {
-                                required: true,
-                                message: "What's the start date",
-                            },
-                        ]}
-                    >
-                        <DatePicker onChange={e => setStartDate(moment(e).format(
-                            "MMM D, YYYY"
-                        ))} />
-                    </Form.Item>
-                    <Form.Item name="end_date"
-                        label="End date"
-                        rules={[
-                            {
-                                required: true,
-                                message: "What's the end date",
-                            },
-                        ]}
-                    >
-                        <DatePicker onChange={e => setEndDate(moment(e).format(
-                            "MMM D, YYYY"
-                        ))} />
-                    </Form.Item>
-
-
-
-                    <Button
-                        loading={loading}
-                        htmlType="submit"
-                        className="mt-2"
-                        type="primary"
-                        onClick={() => {
-                            setPayment(false)
-                            setSchedule(true)
-                        }}
-                    >
-                        Schedule date
-                    </Button>
-                    <Button
-                        className="mt-2 mx-3"
-                        type="primary"
-                        onClick={() => setPayment(false)}
-                    >
-                        Close
-                    </Button>
-                </Form>
-
-            </Modal> */}
 
         </section>
     )
