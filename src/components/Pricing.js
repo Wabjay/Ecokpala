@@ -248,6 +248,7 @@ function Pricing(props) {
     // Calendar
 
     const calendarData = async (value) => {
+        console.log(value)
         try {
             setLoading(true);
 
@@ -874,14 +875,12 @@ function Pricing(props) {
             <Modal
                 title='Schedule'
                 centered
-                // open={Props.info?.schedule}
                 open={schedule}
                 width={"fit-content"}
                 footer={null}
                 onCancel={()=>setSchedule(false)}
 
             >
-                {/* <AddCal /> */}
 
                 <Form
                     form={form}
@@ -952,6 +951,9 @@ function Pricing(props) {
                             htmlType="submit"
                             className="mt-2"
                             type="primary"
+                            onClick={() => {
+                               console.log("first")
+                            }}
                         >
 
                             Schedule
