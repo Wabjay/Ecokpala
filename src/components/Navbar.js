@@ -29,14 +29,16 @@ function Navbar() {
                     <a className="link" href="#portfolio">Portfolio</a>
                 </li>
                 <li className="item">
+                    <a className="link" href="#instruction">How it Works</a>
+                </li>
+
+                <li className="item">
                     <a className="link" href="#testmonial">Testmonial</a>
                 </li>
                 <li className="item">
                     <a className="link" href="#contact">Contact</a>
                 </li>
-                {/* <li className="item">
-                    <a className="link" href="#blog">Blog</a>
-                </li> */}
+                
             </ul>
             <a href="javascript:void(0)" id="nav-toggle" onClick={handleToggle} className="hamburger hamburger--elastic">
                 <div className="hamburger-box">

@@ -130,12 +130,10 @@
     margin-bottom: 0.5rem;
  }
 
- /* .input-radio{
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    width: 90%;
- } */
+ 
+ .booking{
+    padding: 0 16px;
+ }
 
  .input-radio label{
     margin-bottom: 0;
