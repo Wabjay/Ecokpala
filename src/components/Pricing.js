@@ -18,7 +18,7 @@ function Pricing(props) {
     const [form] = Form.useForm();
     const { Option } = Select;
     const { TextArea } = Input;
-    const options = useMemo(()=> countryList().getData(), [])
+    const options = useMemo(() => countryList().getData(), [])
 
 
 
@@ -36,24 +36,14 @@ function Pricing(props) {
     const [pitch, setPitch] = useState(false)
 
     // SCRIPT TO UPLOAD IMAGE TO CLOUDINARY
-    const [uploadCanvassFile, setUploadCanvassFile] = useState("");
     const [canvassUpload, setCanvassUpload] = useState("")
     const [pitchUpload, setPitchUpload] = useState("")
-    const [uploadPitchFile, setUploadPitchFile] = useState("");
-
-    // const [messageApi, contextHolder] = message.useMessage();
-
-    // const success = () => {
-    //   messageApi.open({
-    //     type: 'success',
-    //     content: 'This is a success message',
-    //   });
-    // };
-    // success()
 
 
 
-    useEffect(() => {
+
+
+    const PitchFile = async (uploadPitchFile) => {
         const formData = new FormData();
         formData.append("file", uploadPitchFile);
         formData.append("upload_preset", "ecokpala");
@@ -70,10 +60,10 @@ function Pricing(props) {
             .catch((error) => {
                 console.log(error);
             });
+    }
 
-    }, [uploadPitchFile])
 
-    useEffect(() => {
+    const CanvassFile = async (uploadCanvassFile) => {
         const formData = new FormData();
         formData.append("file", uploadCanvassFile);
         formData.append("upload_preset", "ecokpala");
@@ -90,8 +80,7 @@ function Pricing(props) {
             .catch((error) => {
                 console.log(error);
             });
-
-    }, [uploadCanvassFile])
+    }
 
 
     // const addPitch = (e) => {
@@ -151,9 +140,9 @@ function Pricing(props) {
             stage: value.stage,
             plan: value.plan,
             expectations: value.expectations,
-            reference: value.plan +  randomstring.generate({length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }),
+            reference: value.plan + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }),
             bill: 30,
-            country : country,
+            country: country,
             email: value.email
         }
         formData(fields)
@@ -172,9 +161,9 @@ function Pricing(props) {
             stage: value.stage,
             plan: value.plan,
             expectations: value.expectations,
-            reference: value.plan +  randomstring.generate({length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }),
+            reference: value.plan + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }),
             bill: 81,
-            country : country,
+            country: country,
             email: value.email
         }
         formData(fields)
@@ -194,9 +183,9 @@ function Pricing(props) {
             plan: value.plan,
             expectations: value.expectations,
             others: value.others,
-            reference: value.plan +  randomstring.generate({length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }),
+            reference: value.plan + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }),
             bill: 1500,
-            country : country === country,
+            country: country === country,
             email: value.email
         }
         formData(fields)
@@ -226,7 +215,9 @@ function Pricing(props) {
                     notification.success({
                         message: "Form submitted",
                         description: "Thank you, You will recieve an email with the payment instruction!.",
-                      })
+                    })
+                    setPitchUpload("")
+                    setCanvassUpload("")
                     onReset()
                         (fields.plan === "lite" ? setLite(false) : fields.plan === "basic" ? setBasic(false) : setPro(false))
                     console.log(fields)
@@ -244,7 +235,7 @@ function Pricing(props) {
 
 
     return (
-      
+
         <section className="section" id="pricing">
 
             <div className="container text-center">
@@ -334,10 +325,10 @@ function Pricing(props) {
                 width={"800px"}
                 footer={null}
             >
-                  {loading && 
-                  <div  className='spinner'>
-                    <Spin size='large'/>
-                  </div> }
+                {loading &&
+                    <div className='spinner'>
+                        <Spin size='large' />
+                    </div>}
                 <Form
                     form={form}
                     initialValues={{ plan: 'lite' }}
@@ -421,7 +412,7 @@ function Pricing(props) {
                         label="Do you have Business Model Canvass">
                         <Radio.Group
                             className="radio_button"
-                            defaultValue="yes"
+                            initialValues="yes"
                             onChange={(e: RadioChangeEvent) => {
                                 e.target.value === "yes" ? setCanvass(false) : setCanvass(true)
                             }}
@@ -434,10 +425,11 @@ function Pricing(props) {
                     <div className='uploadInput'>
                         <p className='textLabel'>Upload Business Model Canvass</p>
                         <input type="file"
+                            required
                             disabled={canvass}
-
-                            onChange={(event) => (setUploadCanvassFile(event.target.files[0])
+                            onChange={(event) => (CanvassFile(event.target.files[0])
                             )}
+                        // value={canvassUpload === "" && ""}
                         />
                     </div>
 
@@ -457,7 +449,7 @@ function Pricing(props) {
 
                         >
 
-                            Make Payment
+                            Submit
                         </Button>
                         <Button
                             className="mt-2 mx-3"
@@ -465,6 +457,7 @@ function Pricing(props) {
                             onClick={() => {
                                 onReset()
                                 setLite(false)
+                    setCanvassUpload("")
                             }}
                         >
                             Close
@@ -568,7 +561,7 @@ function Pricing(props) {
                     >
                         <Radio.Group
                             className="radio_button"
-                            defaultValue='yes'
+                            initialValues='yes'
                             onChange={(e: RadioChangeEvent) => {
                                 e.target.value === "yes" ? setCanvass(false) : setCanvass(true)
                             }}
@@ -582,9 +575,9 @@ function Pricing(props) {
                     <div className='uploadInput'>
                         <p className='textLabel'>Upload Business Model Canvass</p>
                         <input type="file"
-                        required
+                            required
                             disabled={canvass}
-                            onChange={(event) => (setUploadCanvassFile(event.target.files[0])
+                            onChange={(event) => (CanvassFile(event.target.files[0])
                             )}
                         />
                     </div>
@@ -593,7 +586,7 @@ function Pricing(props) {
                         label="Do you have a pitch deck?">
                         <Radio.Group
                             className="radio_button"
-                            defaultValue='yes'
+                            initialValues='yes'
                             onChange={(e: RadioChangeEvent) => {
                                 e.target.value === "yes" ? setPitch(false) : setPitch(true)
                             }}
@@ -606,9 +599,11 @@ function Pricing(props) {
                     <div className='uploadInput'>
                         <p className='textLabel'> Upload pitch deck</p>
                         <input type="file"
-                        required
+                            required
                             disabled={pitch}
-                            onChange={(event) => (setUploadPitchFile(event.target.files[0])
+                            onChange={(event) => (
+                                // setUploadPitchFile(event.target.files[0])
+                                PitchFile(event.target.files[0])
                             )}
                         />
                     </div>
@@ -631,7 +626,7 @@ function Pricing(props) {
                         //       setBasic(false)
                         //   }}
                         >
-                            Make Payment
+                            Submit
                         </Button>
                         <Button
                             className="mt-2 mx-3"
@@ -639,6 +634,8 @@ function Pricing(props) {
                             onClick={() => {
                                 onReset()
                                 setBasic(false)
+                                setPitchUpload("")
+                    setCanvassUpload("")
                             }}
                         >
                             Close
@@ -742,7 +739,7 @@ function Pricing(props) {
                     >
                         <Radio.Group
                             className="radio_button"
-                            defaultValue='yes'
+                            initialValues='yes'
                             onChange={(e: RadioChangeEvent) => {
                                 e.target.value === "yes" ? setCanvass(false) : setCanvass(true)
                             }}
@@ -756,9 +753,9 @@ function Pricing(props) {
                     <div className='uploadInput'>
                         <p className='textLabel'>Upload Business Model Canvass</p>
                         <input type="file"
-                        required
+                            required
                             disabled={canvass}
-                            onChange={(event) => (setUploadCanvassFile(event.target.files[0])
+                            onChange={(event) => (CanvassFile(event.target.files[0])
                             )}
                         />
                     </div>
@@ -767,7 +764,7 @@ function Pricing(props) {
                         label="Do you have a pitch deck?">
                         <Radio.Group
                             className="radio_button"
-                            defaultValue='yes'
+                            initialValues='yes'
                             onChange={(e: RadioChangeEvent) => {
                                 e.target.value === "yes" ? setPitch(false) : setPitch(true)
                             }}
@@ -780,9 +777,10 @@ function Pricing(props) {
                     <div className='uploadInput'>
                         <p className='textLabel'> Upload pitch deck</p>
                         <input type="file"
-                        required
+                            required
                             disabled={pitch}
-                            onChange={(event) => (setUploadPitchFile(event.target.files[0])
+                            onChange={(event) => (
+                                PitchFile(event.target.files[0])
                             )}
                         />
                     </div>
@@ -800,19 +798,17 @@ function Pricing(props) {
                             htmlType="submit"
                             className="mt-2"
                             type="primary"
-                        //     onClick={() => {
-                        //         onReset()
-                        //       setBasic(false)
-                        //   }}
                         >
-                            Make Payment
+                            Submit
                         </Button>
                         <Button
                             className="mt-2 mx-3"
                             type="primary"
                             onClick={() => {
                                 onReset()
-                                setBasic(false)
+                                setPro(false)
+                                setPitchUpload("")
+                    setCanvassUpload("")
                             }}
                         >
                             Close

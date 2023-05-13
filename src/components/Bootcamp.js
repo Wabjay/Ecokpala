@@ -253,7 +253,7 @@ function Bootcamp() {
                         //       setBasic(false)
                         //   }}
                         >
-                            Make Payment
+                            Submit
                         </Button>
                         <Button
                             className="mt-2 mx-3"
