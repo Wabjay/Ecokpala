@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import '../App.css'
-import { Button, Form, Input, InputNumber, Select, Modal, DatePicker, message } from 'antd'
+import { Button, Form, Input, InputNumber, Select, Modal, DatePicker, message, notification } from 'antd'
 import {  } from 'devextreme-react'
 import axios from 'axios'
 import moment from 'moment'
@@ -15,15 +15,6 @@ function Bootcamp() {
     const [startDate, setStartDate] = useState("")
     const [endDate, setEndDate] = useState("")
 
-
-    const [messageApi, contextHolder] = message.useMessage();
-
-    const success = () => {
-      messageApi.open({
-        type: 'success',
-        content: 'This is a success message',
-      });
-    };
 
     const onReset = () => {
         form.resetFields();
@@ -70,7 +61,10 @@ function Bootcamp() {
                     console.log("success!")
                     setLoading(false);
                     onReset()
-                    success()
+                    notification.success({
+                        message: "Form submitted",
+                        description: "Thank you, I will get back to you shortly.",
+                      })
                     setHire(false)
                     console.log(fields)
                 })

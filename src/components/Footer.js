@@ -12,7 +12,7 @@ function Footer() {
                 Okpala</a>
         </p>
         <div className="social-links text-right m-auto ml-sm-auto">
-            <a href="https://www.facebook.com/emmacokpala" className="link"><i className="ti-facebook"></i></a>
+            <a href="https://www.facebook.com/emmacokpala" className="link"><i className="fa fa-facebook"></i></a>
             <a href="https://www.twitter.com/emmacokpala" className="link"><i className="ti-twitter-alt"></i></a>
             <a href="https://www.instagram.com/emmacokpala" className="link"><i className="ti-instagram"></i></a>
             <a href="https://www.linkedin.com/in/emmacokpala " className="link"><i className="ti-linkedin"></i></a>

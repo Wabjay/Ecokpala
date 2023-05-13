@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import '../App.css'
 import axios from 'axios';
+import { message, notification } from 'antd';
 
 function Contact() {
     const [loading, setLoading] = useState(false)
@@ -9,23 +10,8 @@ function Contact() {
   const [message, setMessage] = useState('');
 
 
-    // const onReset = () => {
-    //     form.resetFields();
-    // };
-
-    const contactInfo = (e) => {
-        e.preventDefault()
-        let fields = {
-            name: name,
-           email: email,
-           message: message
-           
-        }
-        formData(fields)
-        console.log(fields)
-    };
-
-    const formData = async (fields) => {
+    const formData = (fields) => {
+        fields.preventDefault()
         try {
             setLoading(true);
 
@@ -35,18 +21,21 @@ function Contact() {
             };
             axios.post('https://api.airtable.com/v0/appHpGFLRdNMBkaIA/contact',
                 {
-                    fields
+                    fields:{
+                        name: name,
+                        email: email,
+                        message: message
+                    }
                     },
                      { headers: headers_ }
             )
                 .then((resp) => {
-                    console.log("success!")
                     setLoading(false);
-                    setEmail("")
-                    setMessage("")
-                    setName("")
-                    // success()
-                    // setHire(false)
+                    fields.target.reset();
+                    notification.success({
+                        message: "Form submitted",
+                        description: "Thank you for contacting us.",
+                      })
                     console.log(fields)
                 })
                 .catch((error) => {
@@ -66,7 +55,7 @@ function Contact() {
         <p className="section-subtitle">Want to know more?</p>
         <h6 className="section-title mb-5">Contact Me</h6>
       
-        <form action="" onSubmit={contactInfo} className="contact-form col-md-10 col-lg-8 m-auto">
+        <form action="" onSubmit={formData} className="contact-form col-md-10 col-lg-8 m-auto">
             <div className="form-row">
                 <div className="form-group col-sm-6">
                     <input type="text" size="50" className="form-control" placeholder="Your Name" required 

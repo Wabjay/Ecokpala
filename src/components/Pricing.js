@@ -8,7 +8,7 @@ import axios from 'axios';
 import randomstring from 'randomstring'
 import countryList from 'react-select-country-list';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Button, Form, Input, InputNumber, Modal, Select, Upload, RadioChangeEvent, Radio, DatePicker, Spin, Alert, message } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, Select, Upload, RadioChangeEvent, Radio, DatePicker, Spin, Alert, message, notification } from 'antd';
 import { UploadOutlined } from "@ant-design/icons";
 import moment from 'moment/moment';
 
@@ -41,14 +41,14 @@ function Pricing(props) {
     const [pitchUpload, setPitchUpload] = useState("")
     const [uploadPitchFile, setUploadPitchFile] = useState("");
 
-    const [messageApi, contextHolder] = message.useMessage();
+    // const [messageApi, contextHolder] = message.useMessage();
 
-    const success = () => {
-      messageApi.open({
-        type: 'success',
-        content: 'This is a success message',
-      });
-    };
+    // const success = () => {
+    //   messageApi.open({
+    //     type: 'success',
+    //     content: 'This is a success message',
+    //   });
+    // };
     // success()
 
 
@@ -223,7 +223,10 @@ function Pricing(props) {
                 .then((resp) => {
                     console.log("success!")
                     setLoading(false);
-                    success()
+                    notification.success({
+                        message: "Form submitted",
+                        description: "Thank you, You will recieve an email with the payment instruction!.",
+                      })
                     onReset()
                         (fields.plan === "lite" ? setLite(false) : fields.plan === "basic" ? setBasic(false) : setPro(false))
                     console.log(fields)
