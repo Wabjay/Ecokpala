@@ -43,7 +43,7 @@ function Bootcamp() {
             others: value.others ? value.others : "",
            
         }
-        // formData(fields)
+        formData(fields)
         console.log(fields)
     };
 
@@ -115,7 +115,8 @@ function Bootcamp() {
                     onReset()
                     setHire(false)
                 }}
-                width={"800px"}
+                width={"80%"}
+                style={{ maxWidth: "800px"}}
                 footer={null}
             >
                 <Spin spinning={loading}>

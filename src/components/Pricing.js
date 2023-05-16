@@ -13,8 +13,8 @@ import {
     ref,
     uploadBytes,
     getDownloadURL,
-  } from "firebase/storage";
-  import { storage } from "../firebase";
+} from "firebase/storage";
+import { storage } from "../firebase";
 import useMessage from 'antd/es/message/useMessage';
 
 
@@ -24,7 +24,7 @@ function Pricing(props) {
     const { Option } = Select;
     const { TextArea } = Input;
     const options = useMemo(() => countryList().getData(), [])
-   
+
     const [messageApi, contextHolder] = useMessage();
 
 
@@ -53,29 +53,29 @@ function Pricing(props) {
 
     const PitchFile = async (uploadPitchFile) => {
         console.log(uploadPitchFile)
-          if (uploadPitchFile == null) return;
-          const imageRef = ref(storage, `files/${uploadPitchFile.name + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}`);
-          uploadBytes(imageRef, uploadPitchFile).then((snapshot) => {
+        if (uploadPitchFile == null) return;
+        const imageRef = ref(storage, `files/${uploadPitchFile.name + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}`);
+        uploadBytes(imageRef, uploadPitchFile).then((snapshot) => {
             getDownloadURL(snapshot.ref).then((url) => {
                 setPitchUpload(url);
             });
-          });
+        });
     };
 
 
-    const CanvassFile =  (uploadCanvassFile) => {
+    const CanvassFile = (uploadCanvassFile) => {
         console.log(uploadCanvassFile)
         if (uploadCanvassFile == null) return;
         const imageRef = ref(storage, `files/${uploadCanvassFile.name + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}`);
         uploadBytes(imageRef, uploadCanvassFile)
-        .then((snapshot) => {
-          getDownloadURL(snapshot.ref)
-          .then((url) => {
-            setCanvassUpload(url);
-            console.log(url)
-          });
-          
-        });
+            .then((snapshot) => {
+                getDownloadURL(snapshot.ref)
+                    .then((url) => {
+                        setCanvassUpload(url);
+                        console.log(url)
+                    });
+
+            });
     }
 
 
@@ -91,10 +91,10 @@ function Pricing(props) {
     }
 
     // Lite Forms
-    const liteForm = (value) => {   
+    const liteForm = (value) => {
         CanvassFile(canvassFile)
         console.log(canvassFile)
-       liteForms(value)
+        liteForms(value)
     };
     const liteForms = (value) => {
         let fields = {
@@ -120,7 +120,7 @@ function Pricing(props) {
     const basicForm = (value) => {
         CanvassFile(canvassFile)
         PitchFile(pitchFile)
-       basicForms(value)
+        basicForms(value)
     };
     const basicForms = (value) => {
         let fields = {
@@ -195,17 +195,17 @@ function Pricing(props) {
                         content: 'Thank you, You will recieve an email with the payment instruction!.',
                         className: 'custom-class',
                         style: {
-                          marginTop: '20vh',
+                            marginTop: '20vh',
                         },
-                      });
+                    });
                     setPitchUpload("")
                     setCanvassUpload("")
                     onReset()
                     fields.plan === "lite" && setLite(false)
                     fields.plan === "basic" && setBasic(false)
-                    fields.plan === "pro" &&  setPro(false)
+                    fields.plan === "pro" && setPro(false)
                     console.log(fields)
-        })
+                })
                 .catch((error) => {
                     console.log(error);
                     setLoading(false);
@@ -296,10 +296,10 @@ function Pricing(props) {
                     </div>
                 </div>
             </div>
-
+        {contextHolder}
             {/* Lite Plan Modal */}
             <Modal
-             destroyOnClose={true}
+                destroyOnClose={true}
                 title="Lite Plan"
                 centered
                 open={lite}
@@ -307,181 +307,182 @@ function Pricing(props) {
                     onReset()
                     setLite(false)
                 }}
-                width={"800px"}
+                width={"80%"}
+                style={{ maxWidth: "800px" }}
                 footer={null}
             >
-              <Spin spinning={loading}>
-                <Form
-                    form={form}
-                    initialValues={{ lite: 'lite', country: "Nigeria", canvass: "no" }}
-                    name="lite"
-                    onFinish={liteForm}
-                    layout="vertical"
-                    className='formGrid'
-                // style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }} 
-                >
+                <Spin spinning={loading}>
+                    <Form
+                        form={form}
+                        initialValues={{ lite: 'lite', country: "Nigeria", canvass: "no" }}
+                        name="lite"
+                        onFinish={liteForm}
+                        layout="vertical"
+                        className='formGrid'
+                    // style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }} 
+                    >
 
-                    <Form.Item name="lite" style={{ display: 'none' }}>
-                        <Input />
-                    </Form.Item>
+                        <Form.Item name="lite" style={{ display: 'none' }}>
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item name="firstname" label="First name"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please enter first name",
-                            },
-                        ]}>
-                        <Input
-                            placeholder='Enter first name'
-                            className="inputWidthFull"
-                        />
-                    </Form.Item>
+                        <Form.Item name="firstname" label="First name"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter first name",
+                                },
+                            ]}>
+                            <Input
+                                placeholder='Enter first name'
+                                className="inputWidthFull"
+                            />
+                        </Form.Item>
 
-                    <Form.Item name="lastname" label="Last name"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please enter last name",
-                            },
-                        ]}>
-                        <Input
-                            placeholder='Enter last name'
-                            className="inputWidthFull"
-                        />
-                    </Form.Item>
-
-
-                    <Form.Item name="email" label="Email address"
-                        rules={[
-                            {
-                                type: 'email',
-                                message: 'The input is not valid E-mail!',
-                              },
-                            {
-                                required: true,
-                                message: "Please enter email address",
-                            },
-                        ]}>
-                        <Input
-                            placeholder='Email address'
-                            className="inputWidthFull"
-                        />
-                    </Form.Item>
-
-                    <Form.Item name="country" label="Country of residence"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Choose a country of residence",
-                            }
-                        ]}>
-                        <Select
-                            placeholder="Country of residence"
-                            options={options} value={options} onChange={changeHandler} />
-                    </Form.Item>
+                        <Form.Item name="lastname" label="Last name"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter last name",
+                                },
+                            ]}>
+                            <Input
+                                placeholder='Enter last name'
+                                className="inputWidthFull"
+                            />
+                        </Form.Item>
 
 
-                    <Form.Item name="company" label="Company Name">
-                        <Input
-                            placeholder='Enter company Name'
-                            className="inputWidthFull"
-                        />
-                    </Form.Item>
+                        <Form.Item name="email" label="Email address"
+                            rules={[
+                                {
+                                    type: 'email',
+                                    message: 'The input is not valid E-mail!',
+                                },
+                                {
+                                    required: true,
+                                    message: "Please enter email address",
+                                },
+                            ]}>
+                            <Input
+                                placeholder='Email address'
+                                className="inputWidthFull"
+                            />
+                        </Form.Item>
+
+                        <Form.Item name="country" label="Country of residence"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Choose a country of residence",
+                                }
+                            ]}>
+                            <Select
+                                placeholder="Country of residence"
+                                options={options} value={options} onChange={changeHandler} />
+                        </Form.Item>
 
 
-                    <Form.Item name="stage" label="Stage"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Select a stage",
-                            },
-                        ]}>
-                        <Select
-                            placeholder="Choose stage"
-                        >
-                            <Option value="Idea">Idea</Option>
-                            <Option value="Prototype">Prototype</Option>
-                            <Option value="MVP">MVP</Option>
-                            <Option value="Post Revenue">Post Revenue</Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item name="canvass"
-                        label="Do you have Business Model Canvass"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Do you have Business Model Canvass",
-                            },
-                        ]}>
-                        <Radio.Group
-                            className="radio_button"
-                            onChange={(e: RadioChangeEvent) => {
-                                e.target.value === "yes" ? setCanvass(false) : setCanvass(true)
-                            }}
-                        >
-                            <Radio value="yes">Yes</Radio>
-                            <Radio value="no" >No</Radio>
-                        </Radio.Group>
-                    </Form.Item>
-                    <Form.Item
-                        label="Upload Business Model Canvass"
-                        name="canvassUpload"
-                        rules={[
-                            {
-                                required: !canvass,
-                                message: "Upload Business Model Canvass",
-                            },
-                        ]}>
-                        <Upload 
-                            onChange={(e) => (setCanvassFile(e.file.originFileObj))}
-                            maxCount={1}
-                            listType="picture"
-                        //   beforeUpload={() => false}
-                        // className="avatar-uploader"
-                        >
-                            <Button disabled={canvass}>Upload Canvass</Button>
-                        </Upload>
-                    </Form.Item>
-
-                    <Form.Item name="expectations"
-                        label="Expectations" style={{ gridColumn: '1/3' }}>
-                        <TextArea rows={4} placeholder="What are your expectations" />
-                    </Form.Item>
+                        <Form.Item name="company" label="Company Name">
+                            <Input
+                                placeholder='Enter company Name'
+                                className="inputWidthFull"
+                            />
+                        </Form.Item>
 
 
+                        <Form.Item name="stage" label="Stage"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Select a stage",
+                                },
+                            ]}>
+                            <Select
+                                placeholder="Choose stage"
+                            >
+                                <Option value="Idea">Idea</Option>
+                                <Option value="Prototype">Prototype</Option>
+                                <Option value="MVP">MVP</Option>
+                                <Option value="Post Revenue">Post Revenue</Option>
+                            </Select>
+                        </Form.Item>
+                        <Form.Item name="canvass"
+                            label="Do you have Business Model Canvass"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Do you have Business Model Canvass",
+                                },
+                            ]}>
+                            <Radio.Group
+                                className="radio_button"
+                                onChange={(e: RadioChangeEvent) => {
+                                    e.target.value === "yes" ? setCanvass(false) : setCanvass(true)
+                                }}
+                            >
+                                <Radio value="yes">Yes</Radio>
+                                <Radio value="no" >No</Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                        <Form.Item
+                            label="Upload Business Model Canvass"
+                            name="canvassUpload"
+                            rules={[
+                                {
+                                    required: !canvass,
+                                    message: "Upload Business Model Canvass",
+                                },
+                            ]}>
+                            <Upload
+                                onChange={(e) => (setCanvassFile(e.file.originFileObj))}
+                                maxCount={1}
+                                listType="picture"
+                            //   beforeUpload={() => false}
+                            // className="avatar-uploader"
+                            >
+                                <Button disabled={canvass}>Upload Canvass</Button>
+                            </Upload>
+                        </Form.Item>
 
-                    <Form.Item style={{ gridColumn: '1/3' }}>
-                        <Button
-                            loading={loading}
-                            htmlType="submit"
-                            className="mt-2"
-                            type="primary"
+                        <Form.Item name="expectations"
+                            label="Expectations" style={{ gridColumn: '1/3' }}>
+                            <TextArea rows={4} placeholder="What are your expectations" />
+                        </Form.Item>
 
-                        >
 
-                            Submit
-                        </Button>
-                        <Button
-                            className="mt-2 mx-3"
-                            type="primary"
-                            onClick={() => {
-                                onReset()
-                                setLite(false)
-                                // reset
-                            }}
-                        >
-                            Close
-                        </Button>
-                    </Form.Item >
 
-                </Form>
+                        <Form.Item style={{ gridColumn: '1/3' }}>
+                            <Button
+                                loading={loading}
+                                htmlType="submit"
+                                className="mt-2"
+                                type="primary"
+
+                            >
+
+                                Submit
+                            </Button>
+                            <Button
+                                className="mt-2 mx-3"
+                                type="primary"
+                                onClick={() => {
+                                    onReset()
+                                    setLite(false)
+                                    // reset
+                                }}
+                            >
+                                Close
+                            </Button>
+                        </Form.Item >
+
+                    </Form>
                 </Spin>
             </Modal>
 
             {/* Basic Plan Modal */}
             <Modal
-             destroyOnClose={true}
+                destroyOnClose={true}
                 title="Basic Plan"
                 centered
                 open={basic}
@@ -489,220 +490,222 @@ function Pricing(props) {
                     onReset()
                     setBasic(false)
                 }}
-                width={"800px"}
+
+                width={"80%"}
+                style={{ maxWidth: "800px" }}
                 footer={null}
             >
                 <Spin spinning={loading}>
-                <Form
-                    form={form}
-                    initialValues={{ basic: 'basic', country: "Nigeria", canvass: "no", pitch: "no" }}
-                    name="basic"
-                    onFinish={basicForm}
-                    layout="vertical"
-                    className='formGrid'
-                // style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
-                >
-
-                    <Form.Item name="basic" style={{ display: 'none' }} >
-                        <Input />
-                    </Form.Item>
-
-                    <Form.Item name="firstname" label="First name"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please enter first name",
-                            },
-                        ]}>
-                        <Input
-                            placeholder='Enter first name'
-                            className="inputWidthFull"
-                        />
-                    </Form.Item>
-
-                    <Form.Item name="lastname" label="Last name"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please enter last name",
-                            },
-                        ]}>
-                        <Input
-                            placeholder='Enter last name'
-                            className="inputWidthFull"
-                        />
-                    </Form.Item>
-
-                    <Form.Item name="email" label="Email address"
-                        rules={[
-                            {
-                                type: 'email',
-                                message: 'The input is not valid E-mail!',
-                              },
-                              {
-                                required: true,
-                                message: "Please enter email address",
-                            },
-                        ]}>
-                        <Input
-                            placeholder='Email address'
-                            className="inputWidthFull"
-                        />
-                    </Form.Item>
-
-                    <Form.Item name="country" label="Country of residence"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Select your country of residence",
-                            },
-                        ]}>
-                        <Select
-                            // placeholder="Country of residence"
-                            options={options} value={options} onChange={changeHandler} />
-                    </Form.Item>
-
-                    <Form.Item name="company" label="Company Name">
-                        <Input
-                            placeholder='Enter company Name'
-                            className="inputWidthFull"
-                        />
-                    </Form.Item>
-
-
-                    <Form.Item name="stage" label="Stage"
-                        initialValue=''
-                        rules={[
-                            {
-                                required: true,
-                                message: "Choose a stage",
-                            },
-                        ]}>
-                        <Select
-                            placeholder="Choose stage"
-                        >
-                            <Option value="Idea">Idea</Option>
-                            <Option value="Prototype">Prototype</Option>
-                            <Option value="MVP">MVP</Option>
-                            <Option value="Post Revenue">Post Revenue</Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item name="canvass"
-                        label="Do you have Business Model Canvass"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Do you have Business Model Canvass",
-                            },
-                        ]}
+                    <Form
+                        form={form}
+                        initialValues={{ basic: 'basic', country: "Nigeria", canvass: "no", pitch: "no" }}
+                        name="basic"
+                        onFinish={basicForm}
+                        layout="vertical"
+                        className='formGrid'
+                    // style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
                     >
-                        <Radio.Group
-                            className="radio_button"
-                            onChange={(e: RadioChangeEvent) => {
-                                e.target.value === "yes" ? setCanvass(false) : setCanvass(true)
-                            }}
-                            value={canvass}
+
+                        <Form.Item name="basic" style={{ display: 'none' }} >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item name="firstname" label="First name"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter first name",
+                                },
+                            ]}>
+                            <Input
+                                placeholder='Enter first name'
+                                className="inputWidthFull"
+                            />
+                        </Form.Item>
+
+                        <Form.Item name="lastname" label="Last name"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter last name",
+                                },
+                            ]}>
+                            <Input
+                                placeholder='Enter last name'
+                                className="inputWidthFull"
+                            />
+                        </Form.Item>
+
+                        <Form.Item name="email" label="Email address"
+                            rules={[
+                                {
+                                    type: 'email',
+                                    message: 'The input is not valid E-mail!',
+                                },
+                                {
+                                    required: true,
+                                    message: "Please enter email address",
+                                },
+                            ]}>
+                            <Input
+                                placeholder='Email address'
+                                className="inputWidthFull"
+                            />
+                        </Form.Item>
+
+                        <Form.Item name="country" label="Country of residence"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Select your country of residence",
+                                },
+                            ]}>
+                            <Select
+                                // placeholder="Country of residence"
+                                options={options} value={options} onChange={changeHandler} />
+                        </Form.Item>
+
+                        <Form.Item name="company" label="Company Name">
+                            <Input
+                                placeholder='Enter company Name'
+                                className="inputWidthFull"
+                            />
+                        </Form.Item>
+
+
+                        <Form.Item name="stage" label="Stage"
+                            initialValue=''
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Choose a stage",
+                                },
+                            ]}>
+                            <Select
+                                placeholder="Choose stage"
+                            >
+                                <Option value="Idea">Idea</Option>
+                                <Option value="Prototype">Prototype</Option>
+                                <Option value="MVP">MVP</Option>
+                                <Option value="Post Revenue">Post Revenue</Option>
+                            </Select>
+                        </Form.Item>
+                        <Form.Item name="canvass"
+                            label="Do you have Business Model Canvass"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Do you have Business Model Canvass",
+                                },
+                            ]}
                         >
-                            <Radio value="yes">Yes</Radio>
-                            <Radio value="no" >No</Radio>
-                        </Radio.Group>
-                    </Form.Item>
-                    <Form.Item
-                        label="Upload Business Model Canvass"
-                        rules={[
-                            {
-                                required: !canvass,
-                                message: "Upload Business Model Canvass",
-                            },
-                        ]}>
-                        <Upload name="canvassUpload"
-                            onChange={(e) => (setCanvassFile(e.file.originFileObj))}
-                            maxCount={1}
-                            listType="picture"
-                        //   beforeUpload={() => false}
-                        // className="avatar-uploader"
-                        >
-                            <Button disabled={canvass}>Upload Canvass</Button>
-                        </Upload>
-                    </Form.Item>
+                            <Radio.Group
+                                className="radio_button"
+                                onChange={(e: RadioChangeEvent) => {
+                                    e.target.value === "yes" ? setCanvass(false) : setCanvass(true)
+                                }}
+                                value={canvass}
+                            >
+                                <Radio value="yes">Yes</Radio>
+                                <Radio value="no" >No</Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                        <Form.Item
+                            label="Upload Business Model Canvass"
+                            rules={[
+                                {
+                                    required: !canvass,
+                                    message: "Upload Business Model Canvass",
+                                },
+                            ]}>
+                            <Upload name="canvassUpload"
+                                onChange={(e) => (setCanvassFile(e.file.originFileObj))}
+                                maxCount={1}
+                                listType="picture"
+                            //   beforeUpload={() => false}
+                            // className="avatar-uploader"
+                            >
+                                <Button disabled={canvass}>Upload Canvass</Button>
+                            </Upload>
+                        </Form.Item>
 
 
-                    <Form.Item name="pitch"
-                        label="Do you have a pitch deck?"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Do you have a pitch deck?",
-                            },
-                        ]}>
-                        <Radio.Group
-                            className="radio_button"
-                            onChange={(e: RadioChangeEvent) => {
-                                e.target.value === "yes" ? setPitch(false) : setPitch(true)
-                            }}
-                            value={pitch}
-                        >
-                            <Radio value="yes">Yes</Radio>
-                            <Radio value="no" >No</Radio>
-                        </Radio.Group>
-                    </Form.Item>
-                    <Form.Item
-                        label="Upload pitch deck"
+                        <Form.Item name="pitch"
+                            label="Do you have a pitch deck?"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Do you have a pitch deck?",
+                                },
+                            ]}>
+                            <Radio.Group
+                                className="radio_button"
+                                onChange={(e: RadioChangeEvent) => {
+                                    e.target.value === "yes" ? setPitch(false) : setPitch(true)
+                                }}
+                                value={pitch}
+                            >
+                                <Radio value="yes">Yes</Radio>
+                                <Radio value="no" >No</Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                        <Form.Item
+                            label="Upload pitch deck"
 
-                        rules={[
-                            {
-                                required: !pitch,
-                                message: "Upload pitch deck",
-                            },
-                        ]}>
-                        <Upload name="pitchUpload"
-                            onChange={(e) => (setPitchFile(e.file.originFileObj))}
-                            maxCount={1}
-                            listType="picture"
-                        //   beforeUpload={() => false}
-                        // className="avatar-uploader"
-                        >
-                            <Button disabled={pitch}> Upload pitch deck</Button>
-                        </Upload>
-                    </Form.Item>
+                            rules={[
+                                {
+                                    required: !pitch,
+                                    message: "Upload pitch deck",
+                                },
+                            ]}>
+                            <Upload name="pitchUpload"
+                                onChange={(e) => (setPitchFile(e.file.originFileObj))}
+                                maxCount={1}
+                                listType="picture"
+                            //   beforeUpload={() => false}
+                            // className="avatar-uploader"
+                            >
+                                <Button disabled={pitch}> Upload pitch deck</Button>
+                            </Upload>
+                        </Form.Item>
 
-                    <Form.Item name="expectations"
-                        label="Expectations" style={{ gridColumn: '1/3' }}>
-                        <TextArea rows={4} placeholder="What are your expectations" />
-                    </Form.Item>
+                        <Form.Item name="expectations"
+                            label="Expectations" style={{ gridColumn: '1/3' }}>
+                            <TextArea rows={4} placeholder="What are your expectations" />
+                        </Form.Item>
 
 
 
-                    <Form.Item style={{ gridColumn: '1/3' }}>
-                        <Button
-                            loading={loading}
-                            htmlType="submit"
-                            className="mt-2"
-                            type="primary"
-                        >
-                            Submit
-                        </Button>
-                        <Button
-                            className="mt-2 mx-3"
-                            type="primary"
-                            onClick={() => {
-                                onReset()
-                                setBasic(false)
-                                //             setPitchUpload("")
-                                // setCanvassUpload("")
-                            }}
-                        >
-                            Close
-                        </Button>
-                    </Form.Item >
+                        <Form.Item style={{ gridColumn: '1/3' }}>
+                            <Button
+                                loading={loading}
+                                htmlType="submit"
+                                className="mt-2"
+                                type="primary"
+                            >
+                                Submit
+                            </Button>
+                            <Button
+                                className="mt-2 mx-3"
+                                type="primary"
+                                onClick={() => {
+                                    onReset()
+                                    setBasic(false)
+                                    //             setPitchUpload("")
+                                    // setCanvassUpload("")
+                                }}
+                            >
+                                Close
+                            </Button>
+                        </Form.Item >
 
-                </Form>
+                    </Form>
                 </Spin>
             </Modal>
 
             {/* Pro Plan Modal */}
             <Modal
-             destroyOnClose={true}
+                destroyOnClose={true}
                 title="Pro Plan"
                 centered
                 open={pro}
@@ -710,217 +713,219 @@ function Pricing(props) {
                     onReset()
                     setPro(false)
                 }}
-                width={"800px"}
+
+                width={"80%"}
+                style={{ maxWidth: "800px" }}
                 footer={null}
             >
                 <Spin spinning={loading}>
-                <Form
-                    form={form}
-                    initialValues={{ pro: 'pro', country: "Nigeria", canvass: "no", pitch: "no"  }}
-                    name="pro"
-                    onFinish={proForm}
-                    layout="vertical"
-                    className='formGrid'
-                // style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
-                >
-
-                    <Form.Item name="pro" style={{ display: 'none' }} >
-                        <Input />
-                    </Form.Item>
-
-                    <Form.Item name="firstname" label="First name"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please enter first name",
-                            },
-                        ]}>
-                        <Input
-                            placeholder='Enter first name'
-                            className="inputWidthFull"
-                        />
-                    </Form.Item>
-
-                    <Form.Item name="lastname" label="Last name"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please enter last name",
-                            },
-                        ]}>
-                        <Input
-                            placeholder='Enter last name'
-                            className="inputWidthFull"
-                        />
-                    </Form.Item>
-                    <Form.Item name="email" label="Email address"
-                        rules={[
-                            {
-                                type: 'email',
-                                message: 'The input is not valid E-mail!',
-                              },
-                            {
-                                required: true,
-                                message: "Please enter email address",
-                            },
-                        ]}>
-                        <Input
-                            placeholder='Email address'
-                            className="inputWidthFull"
-                        />
-                    </Form.Item>
-
-                    <Form.Item name="country" label="Country of residence"
-                        // initialValue={ng}
-                        rules={[
-                            {
-                                required: true,
-                                message: "Select your country of residence",
-                            },
-                        ]}>
-                        <Select
-                            placeholder="Nigeria" options={options} value={options} onChange={changeHandler} />
-                    </Form.Item>
-
-
-                    <Form.Item name="company" label="Company Name">
-                        <Input
-                            placeholder='Enter company Name'
-                            className="inputWidthFull"
-                        />
-                    </Form.Item>
-
-
-                    <Form.Item name="stage" label="Stage"
-                        initialValue=''
-                        rules={[
-                            {
-                                required: true,
-                                message: "Choose a stage",
-                            },
-                        ]}>
-                        <Select
-                            placeholder="Choose stage"
-                        >
-                            <Option value="Idea">Idea</Option>
-                            <Option value="Prototype">Prototype</Option>
-                            <Option value="MVP">MVP</Option>
-                            <Option value="Post Revenue">Post Revenue</Option>
-                        </Select>
-                    </Form.Item>
-
-                    <Form.Item name="canvass"
-                        label="Do you have Business Model Canvass"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Do you have Business Model Canvass",
-                            },
-                        ]}
+                    <Form
+                        form={form}
+                        initialValues={{ pro: 'pro', country: "Nigeria", canvass: "no", pitch: "no" }}
+                        name="pro"
+                        onFinish={proForm}
+                        layout="vertical"
+                        className='formGrid'
+                    // style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridColumnGap: '24px' }}
                     >
-                        <Radio.Group
-                            className="radio_button"
-                            onChange={(e: RadioChangeEvent) => {
-                                e.target.value === "yes" ? setCanvass(false) : setCanvass(true)
-                            }}
-                            value={canvass}
-                        >
-                            <Radio value="yes">Yes</Radio>
-                            <Radio value="no" >No</Radio>
-                        </Radio.Group>
-                    </Form.Item>
-                    <Form.Item
-                        label="Upload Business Model Canvass"
-                        rules={[
-                            {
-                                required: !canvass,
-                                message: "Upload Business Model Canvass",
-                            },
-                        ]}>
-                        <Upload name="canvassUpload"
-                            onChange={(e) => (setCanvassFile(e.file.originFileObj))}
-                            maxCount={1}
-                            listType="picture"
-                            onRemove={canvass}
-                        //   beforeUpload={() => false}
-                        // className="avatar-uploader"
-                        >
-                            <Button disabled={canvass}>Upload Canvass</Button>
-                        </Upload>
-                    </Form.Item>
 
-                    <Form.Item name="pitch"
-                        label="Do you have a pitch deck?"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Do you have a pitch deck?",
-                            },
-                        ]}>
-                        <Radio.Group
-                            className="radio_button"
-                            onChange={(e: RadioChangeEvent) => {
-                                e.target.value === "yes" ? setPitch(false) : setPitch(true)
-                            }}
-                            value={pitch}
-                        >
-                            <Radio value="yes">Yes</Radio>
-                            <Radio value="no" >No</Radio>
-                        </Radio.Group>
-                    </Form.Item>
-                    <Form.Item
-                        label="Upload pitch deck"
+                        <Form.Item name="pro" style={{ display: 'none' }} >
+                            <Input />
+                        </Form.Item>
 
-                        rules={[
-                            {
-                                required: !pitch,
-                                message: "Upload pitch deck",
-                            },
-                        ]}>
-                        <Upload name="pitchUpload"
-                            onChange={(e) => (setPitchFile(e.file.originFileObj))}
-                            maxCount={1}
-                            listType="picture"
-                            onRemove={pitch}
-                        //   beforeUpload={() => false}
-                        // className="avatar-uploader"
-                        >
-                            <Button disabled={pitch}> Upload pitch deck</Button>
-                        </Upload>
-                    </Form.Item>
-                   
-                    <Form.Item name="expectations"
-                        label="Expectations" style={{ gridColumn: '1/3' }}>
-                        <TextArea rows={4} placeholder="What are your expectations" />
-                    </Form.Item>
+                        <Form.Item name="firstname" label="First name"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter first name",
+                                },
+                            ]}>
+                            <Input
+                                placeholder='Enter first name'
+                                className="inputWidthFull"
+                            />
+                        </Form.Item>
+
+                        <Form.Item name="lastname" label="Last name"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter last name",
+                                },
+                            ]}>
+                            <Input
+                                placeholder='Enter last name'
+                                className="inputWidthFull"
+                            />
+                        </Form.Item>
+                        <Form.Item name="email" label="Email address"
+                            rules={[
+                                {
+                                    type: 'email',
+                                    message: 'The input is not valid E-mail!',
+                                },
+                                {
+                                    required: true,
+                                    message: "Please enter email address",
+                                },
+                            ]}>
+                            <Input
+                                placeholder='Email address'
+                                className="inputWidthFull"
+                            />
+                        </Form.Item>
+
+                        <Form.Item name="country" label="Country of residence"
+                            // initialValue={ng}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Select your country of residence",
+                                },
+                            ]}>
+                            <Select
+                                placeholder="Nigeria" options={options} value={options} onChange={changeHandler} />
+                        </Form.Item>
 
 
+                        <Form.Item name="company" label="Company Name">
+                            <Input
+                                placeholder='Enter company Name'
+                                className="inputWidthFull"
+                            />
+                        </Form.Item>
 
-                    <Form.Item style={{ gridColumn: '1/3' }}>
-                        <Button
-                            loading={loading}
-                            htmlType="submit"
-                            className="mt-2"
-                            type="primary"
-                        >
-                            Submit
-                        </Button>
-                        <Button
-                            className="mt-2 mx-3"
-                            type="primary"
-                            onClick={() => {
-                                onReset()
-                                setPro(false)
-                                //             setPitchUpload("")
-                                // setCanvassUpload("")
-                                // setReset(e.target.value = null)
-                            }}
-                        >
-                            Close
-                        </Button>
-                    </Form.Item >
 
-                </Form>
+                        <Form.Item name="stage" label="Stage"
+                            initialValue=''
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Choose a stage",
+                                },
+                            ]}>
+                            <Select
+                                placeholder="Choose stage"
+                            >
+                                <Option value="Idea">Idea</Option>
+                                <Option value="Prototype">Prototype</Option>
+                                <Option value="MVP">MVP</Option>
+                                <Option value="Post Revenue">Post Revenue</Option>
+                            </Select>
+                        </Form.Item>
+
+                        <Form.Item name="canvass"
+                            label="Do you have Business Model Canvass"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Do you have Business Model Canvass",
+                                },
+                            ]}
+                        >
+                            <Radio.Group
+                                className="radio_button"
+                                onChange={(e: RadioChangeEvent) => {
+                                    e.target.value === "yes" ? setCanvass(false) : setCanvass(true)
+                                }}
+                                value={canvass}
+                            >
+                                <Radio value="yes">Yes</Radio>
+                                <Radio value="no" >No</Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                        <Form.Item
+                            label="Upload Business Model Canvass"
+                            rules={[
+                                {
+                                    required: !canvass,
+                                    message: "Upload Business Model Canvass",
+                                },
+                            ]}>
+                            <Upload name="canvassUpload"
+                                onChange={(e) => (setCanvassFile(e.file.originFileObj))}
+                                maxCount={1}
+                                listType="picture"
+                                onRemove={canvass}
+                            //   beforeUpload={() => false}
+                            // className="avatar-uploader"
+                            >
+                                <Button disabled={canvass}>Upload Canvass</Button>
+                            </Upload>
+                        </Form.Item>
+
+                        <Form.Item name="pitch"
+                            label="Do you have a pitch deck?"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Do you have a pitch deck?",
+                                },
+                            ]}>
+                            <Radio.Group
+                                className="radio_button"
+                                onChange={(e: RadioChangeEvent) => {
+                                    e.target.value === "yes" ? setPitch(false) : setPitch(true)
+                                }}
+                                value={pitch}
+                            >
+                                <Radio value="yes">Yes</Radio>
+                                <Radio value="no" >No</Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                        <Form.Item
+                            label="Upload pitch deck"
+
+                            rules={[
+                                {
+                                    required: !pitch,
+                                    message: "Upload pitch deck",
+                                },
+                            ]}>
+                            <Upload name="pitchUpload"
+                                onChange={(e) => (setPitchFile(e.file.originFileObj))}
+                                maxCount={1}
+                                listType="picture"
+                                onRemove={pitch}
+                            //   beforeUpload={() => false}
+                            // className="avatar-uploader"
+                            >
+                                <Button disabled={pitch}> Upload pitch deck</Button>
+                            </Upload>
+                        </Form.Item>
+
+                        <Form.Item name="expectations"
+                            label="Expectations" style={{ gridColumn: '1/3' }}>
+                            <TextArea rows={4} placeholder="What are your expectations" />
+                        </Form.Item>
+
+
+
+                        <Form.Item style={{ gridColumn: '1/3' }}>
+                            <Button
+                                loading={loading}
+                                htmlType="submit"
+                                className="mt-2"
+                                type="primary"
+                            >
+                                Submit
+                            </Button>
+                            <Button
+                                className="mt-2 mx-3"
+                                type="primary"
+                                onClick={() => {
+                                    onReset()
+                                    setPro(false)
+                                    //             setPitchUpload("")
+                                    // setCanvassUpload("")
+                                    // setReset(e.target.value = null)
+                                }}
+                            >
+                                Close
+                            </Button>
+                        </Form.Item >
+
+                    </Form>
                 </Spin>
             </Modal>
 

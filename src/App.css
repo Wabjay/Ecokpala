@@ -12103,6 +12103,10 @@ pre .code {
   width: 80%;
   height: 80%;
 }
+.modalClass{
+  width: 80%;
+  max-width: 800px;
+}
 
 @media (max-width: 767.98px) {
   .footer {
