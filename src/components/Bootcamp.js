@@ -1,17 +1,22 @@
 import React, { useState } from 'react'
 import '../App.css'
-import { Button, Form, Input, InputNumber, Select, Modal, DatePicker, message, notification } from 'antd'
-import {  } from 'devextreme-react'
+import { Button, Form, Input, InputNumber, Select, Modal, DatePicker, message, notification, Spin } from 'antd'
 import axios from 'axios'
 import moment from 'moment'
+import useMessage from 'antd/es/message/useMessage'
 
 function Bootcamp() {
     const [form] = Form.useForm();
     const { Option } = Select;
     const { TextArea } = Input;
+  const [messageApi, contextHolder] = useMessage();
+    
+
 
     const [loading, setLoading] = useState(false)
     const [hire, setHire] = useState(false)
+    const [online, setOnline] = useState(false)
+    const [physical, setPhysical] = useState(false)
     const [startDate, setStartDate] = useState("")
     const [endDate, setEndDate] = useState("")
 
@@ -25,22 +30,29 @@ function Bootcamp() {
         let fields = {
             firstname: value.firstname,
             lastname: value.lastname,
-            company: value.company,
+            company: value.company ? value.company : "",
+            email: value.email,
+            "event-type": value.event_type,
             audience: value.audience,
             mode: value.mode,
-            address: value.address,
-            link: value.link,
-            "start-date": startDate,
+            address: value.address ? value.address : "",
+            link: value.link ? value.link : "",
+            "start-date":startDate,
             "end-date": endDate,
-            stage: value.stage,
-            plan: value.plan,
-            expectations: value.expectations,
-            others: value.others,
+            expectations: value.expectations ? value.expectations : "",
+            others: value.others ? value.others : "",
            
         }
-        formData(fields)
+        // formData(fields)
         console.log(fields)
     };
+
+    const eventMode = (e) => {
+        console.log(e)
+        {e === "physical" && setPhysical(true); setOnline(false)}
+        {e === "online" && setOnline(true); setPhysical(false)}
+        {e === "hybrid"  && setOnline(true); setPhysical(true)}
+    }
 
     const formData = async (fields) => {
         try {
@@ -61,17 +73,16 @@ function Bootcamp() {
                     console.log("success!")
                     setLoading(false);
                     onReset()
-                    notification.success({
-                        message: "Form submitted",
-                        description: "Thank you, I will get back to you shortly.",
-                      })
+                    messageApi.open({
+                        type: 'success',
+                        content: 'Thank you, I will get back to you shortly.',
+                        className: 'custom-class',
+                        style: {
+                          marginTop: '20vh',
+                        },
+                      });
                     setHire(false)
                     console.log(fields)
-                })
-                .catch((error) => {
-                    console.log(error);
-                    setLoading(false);
-
                 })
         } finally {
             setLoading(false);
@@ -92,10 +103,12 @@ function Bootcamp() {
             </div>
         </div>
     </div>
+    {contextHolder}
 
      {/* Hire me modal */}
      <Modal
-                title="Pro Plan"
+      destroyOnClose={true}
+                title="Hire me"
                 centered
                 open={hire}
                 onCancel={() => {
@@ -105,12 +118,12 @@ function Bootcamp() {
                 width={"800px"}
                 footer={null}
             >
+                <Spin spinning={loading}>
                 <Form
                     form={form}
-                    // initialValues={{ plan: 'pro' }}
-                    name="pro"
+                    initialValues={{ audience: 10 }}
+                    name="hire"
                     onFinish={hireForm}
-                    // onFinish={formData}
                     layout="vertical"
                     className='formGrid'
                 >
@@ -142,7 +155,24 @@ function Bootcamp() {
                         />
                     </Form.Item>
 
-                    <Form.Item name="company" label="Company Name (Optional)">
+                    <Form.Item name="email" label="Email address"
+                        rules={[
+                            {
+                                type: 'email',
+                                message: 'The input is not valid E-mail!',
+                              },
+                            {
+                                required: true,
+                                message: "Please enter email address",
+                            },
+                        ]}>
+                        <Input
+                            placeholder='Email address'
+                            className="inputWidthFull"
+                        />
+                    </Form.Item>
+
+                    <Form.Item name="company" label="Company Name">
                         <Input
                             placeholder='Enter company Name'
                             className="inputWidthFull"
@@ -150,7 +180,7 @@ function Bootcamp() {
                     </Form.Item>
 
 
-                    <Form.Item name="event-type" label="Event Type"
+                    <Form.Item name="event_type" label="Event Type"
                         rules={[
                             {
                                 required: true,
@@ -168,6 +198,11 @@ function Bootcamp() {
                         </Select>
                     </Form.Item>
 
+                    <Form.Item name="audience" label="Number of participants"
+                    initialValue={10}>
+                        <InputNumber min={1} max={99999} initialValue={10} />
+                    </Form.Item>
+
 
                     <Form.Item name="start_date"
                         label="Start date"
@@ -178,9 +213,10 @@ function Bootcamp() {
                             },
                         ]}
                     >
-                        <DatePicker onChange={e => setStartDate(moment(e).format(
+                        <DatePicker onChange={e => setStartDate(moment(e.$d).format(
                             "MMM D, YYYY"
-                        ))} />
+                        ))
+                        } />
                     </Form.Item>
                     <Form.Item name="end_date"
                         label="End date"
@@ -191,7 +227,7 @@ function Bootcamp() {
                             },
                         ]}
                     >
-                        <DatePicker onChange={e => setEndDate(moment(e).format(
+                        <DatePicker onChange={e => setEndDate(moment(e.$d).format(
                             "MMM D, YYYY"
                         ))} />
                     </Form.Item>
@@ -205,6 +241,7 @@ function Bootcamp() {
                         ]}>
                         <Select
                             placeholder='Select event mode'
+                            onChange={eventMode}
                         >
                             <Option value="hybrid">Hybrid</Option>
                             <Option value="physical">Physical</Option>
@@ -212,18 +249,28 @@ function Bootcamp() {
                         </Select>
                     </Form.Item>
 
-                    <Form.Item name="audience" label="Number of participants">
-                        <InputNumber min={1} max={99999} defaultValue={10} />
-                    </Form.Item>
-
-                    <Form.Item name="address" label="Enter address">
+                    <Form.Item name="address" label="Enter address" 
+                           rules={[
+                            {
+                                required: physical,
+                                message: "Please enter last name",
+                            },
+                        ]}
+                    style={{ gridColumn: '1/2' }}>
                         <Input
                             placeholder='Address'
                             className="inputWidthFull"
                         />
                     </Form.Item>
 
-                    <Form.Item name="link" label="Event Url">
+                    <Form.Item name="link" label="Event Url" 
+                           rules={[
+                            {
+                                required: online,
+                                message: "Please enter last name",
+                            },
+                        ]}
+                    style={{ gridColumn: '2/3' }}>
                         <Input
                             placeholder='www.example.com'
                             className="inputWidthFull"
@@ -268,6 +315,7 @@ function Bootcamp() {
                     </Form.Item >
 
                 </Form>
+                </Spin>
             </Modal>
 
 </section>

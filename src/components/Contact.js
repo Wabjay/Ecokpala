@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import '../App.css'
 import axios from 'axios';
-import { message, notification } from 'antd';
+import useMessage from 'antd/es/message/useMessage';
 
 function Contact() {
     const [loading, setLoading] = useState(false)
-    const [name, setName] = useState('mine');
+    const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+
+  const [messageApi, contextHolder] = useMessage();
 
 
     const formData = (fields) => {
@@ -32,10 +34,14 @@ function Contact() {
                 .then((resp) => {
                     setLoading(false);
                     fields.target.reset();
-                    notification.success({
-                        message: "Form submitted",
-                        description: "Thank you for contacting us.",
-                      })
+                    messageApi.open({
+                        type: 'success',
+                        content: 'Thank you for contacting!.',
+                        className: 'custom-class',
+                        style: {
+                          marginTop: '20vh',
+                        },
+                      });
                     console.log(fields)
                 })
                 .catch((error) => {
@@ -54,7 +60,7 @@ function Contact() {
     <div className="container text-center">
         <p className="section-subtitle">Want to know more?</p>
         <h6 className="section-title mb-5">Contact Me</h6>
-      
+      {contextHolder}
         <form action="" onSubmit={formData} className="contact-form col-md-10 col-lg-8 m-auto">
             <div className="form-row">
                 <div className="form-group col-sm-6">
@@ -78,9 +84,11 @@ function Contact() {
                 </div>
                 <div className="form-group col-sm-12 mt-3">
                     <input type="submit" value="Send Message" className="btn btn-outline-primary rounded"/>
+                   
                 </div>
             </div>
         </form>
+        {/* <button onClick={success}>message</button> */}
     </div>
 </section>
   )

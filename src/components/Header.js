@@ -10,9 +10,7 @@ function Header() {
             <span className="up">HI!</span>
             <span className="down">I am Emmanuel Okpala</span>
         </h1>
-        <p className="header-subtitle">I Help Aspiring and Budding Enterpreneurs Start Up Right.</p>
-
-        <button className="btn btn-primary">Lets get started</button>
+        <p className="header-subtitle">I Help Aspiring and Budding entrepreneurs. Start Up Right.</p>
     </div>
 </header>
   )
