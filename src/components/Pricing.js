@@ -53,18 +53,18 @@ function Pricing(props) {
 
     useEffect(() => {
         console.log(pitchFile)
-        if (pitchFile == null || pitchFile.status === "removed"  || pitchFile.name === undefined) return setPitchUpload("");
+        if (pitchFile == null || pitchFile.status === "removed"  || pitchFile.name === undefined || pitch) return setPitchUpload("");
         const imageRef = ref(storage, `files/${pitchFile.name + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}`);
         uploadBytes(imageRef, pitchFile).then((snapshot) => {
             getDownloadURL(snapshot.ref).then((url) => {
                 setPitchUpload(url);
             });
         });
-    },[pitchFile]);
+    },[pitchFile, pitch]);
 
     useEffect(() => {
         console.log(canvassFile.name)
-        if (canvassFile == null || canvassFile.status === "removed" || canvassFile.name === undefined) return setCanvassUpload("");
+        if (canvassFile == null || canvassFile.status === "removed" || canvassFile.name === undefined || canvass) return setCanvassUpload("");
         const imageRef = ref(storage, `files/${canvassFile.name + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}`);
         uploadBytes(imageRef, canvassFile)
             .then((snapshot) => {
@@ -75,7 +75,7 @@ function Pricing(props) {
                     });
 
             });
-    },[canvassFile])
+    },[canvassFile, canvass])
 
 
     const onReset = () => {
@@ -112,7 +112,7 @@ function Pricing(props) {
             country: country,
             email: value.email
         }
-        formData(fields)
+        // formData(fields)
         console.log(fields)
     };
 
@@ -137,7 +137,7 @@ function Pricing(props) {
             country: country,
             email: value.email
         }
-        formData(fields)
+        // formData(fields)
         console.log(fields)
     };
 
@@ -150,9 +150,9 @@ function Pricing(props) {
             firstname: value.firstname,
             lastname: value.lastname,
             company: value.company,
-            canvass: value.canvass,
+            canvass: canvassUpload === '' ? "no" : value.canvass,
             "canvass-upload": canvassUpload ? canvassUpload : '',
-            pitch: value.pitch,
+            pitch: pitchUpload === '' ? "no" :  value.pitch,
             "pitch-upload": pitchUpload ? pitchUpload : '',
             stage: value.stage,
             plan: value.pro,
@@ -163,7 +163,7 @@ function Pricing(props) {
             country: country,
             email: value.email
         }
-        formData(fields)
+        // formData(fields)
         console.log(fields)
     };
 
@@ -661,6 +661,7 @@ function Pricing(props) {
                                 maxCount={1}
                                 listType="picture"
                               beforeUpload={() => false}
+                              rules={[{required: true, message:  "Upload pitch deck"}]}
                             // className="avatar-uploader"
                             >
                                 <Button disabled={pitch}> Upload pitch deck</Button>
@@ -844,7 +845,6 @@ function Pricing(props) {
                                 onChange={(e) => (setCanvassFile(e.file))}
                                 maxCount={1}
                                 listType="picture"
-                                onRemove={canvass}
                               beforeUpload={() => false}
                             // className="avatar-uploader"
                             >
@@ -884,7 +884,6 @@ function Pricing(props) {
                                 onChange={(e) => (setPitchFile(e.file))}
                                 maxCount={1}
                                 listType="picture"
-                                onRemove={pitch}
                               beforeUpload={() => false}
                             // className="avatar-uploader"
                             >
