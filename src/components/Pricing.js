@@ -105,15 +105,15 @@ function Pricing(props) {
             // "canvass-upload": canvassUpload ? canvassUpload : '',
             "canvass-upload": canvassUpload ? canvassUpload : '',
             stage: value.stage,
-            plan: value.plan,
+            plan: value.lite,
             expectations: value.expectations,
-            reference: value.plan + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }),
+            reference: value.lite + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }),
             bill: 30,
             country: country,
             email: value.email
         }
         formData(fields)
-        console.log(fields)
+        console.log(fields, canvassUpload)
     };
 
     // Basic Form
@@ -201,9 +201,9 @@ function Pricing(props) {
                     setPitchUpload("")
                     setCanvassUpload("")
                     onReset()
-                    fields.plan === "lite" && setLite(false)
-                    fields.plan === "basic" && setBasic(false)
-                    fields.plan === "pro" && setPro(false)
+                    setLite(false)
+                    setBasic(false)
+                    setPro(false)
                     console.log(fields)
                 })
                 .catch((error) => {
@@ -267,7 +267,7 @@ function Pricing(props) {
                         </div>
                         <div className="pricing-card-footer">
                             <span>$</span>
-                            <span>80/Session</span>
+                            <span>81/Session</span>
                         </div>
                         <button className="btn btn-primary mt-3 pricing-card-btn" onClick={() => setBasic(true)}>Subscribe</button>
                     </div>
@@ -438,6 +438,7 @@ function Pricing(props) {
                                 onChange={(e) => (setCanvassFile(e.file.originFileObj))}
                                 maxCount={1}
                                 listType="picture"
+                                size={100}
                             //   beforeUpload={() => false}
                             // className="avatar-uploader"
                             >

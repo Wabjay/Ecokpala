@@ -17,6 +17,7 @@ function Bootcamp() {
     const [hire, setHire] = useState(false)
     const [online, setOnline] = useState(false)
     const [physical, setPhysical] = useState(false)
+    const [chooseDate, setChooseDate] = useState(true)
     const [startDate, setStartDate] = useState("")
     const [endDate, setEndDate] = useState("")
 
@@ -24,6 +25,16 @@ function Bootcamp() {
     const onReset = () => {
         form.resetFields();
     };
+    const startDay = (current) => {
+        // Can not select days before today and today
+        setChooseDate(false)
+        return current && current < moment();
+      };
+
+      const endDay = (current) => {
+        // Can not select days before today and today
+        return current && current < moment(startDate);
+      };
 
 
     const hireForm = (value) => {
@@ -214,7 +225,9 @@ function Bootcamp() {
                             },
                         ]}
                     >
-                        <DatePicker onChange={e => setStartDate(moment(e.$d).format(
+                        <DatePicker
+                        disabledDate={startDay}
+                         onChange={e => setStartDate(moment(e.$d).format(
                             "MMM D, YYYY"
                         ))
                         } />
@@ -228,7 +241,10 @@ function Bootcamp() {
                             },
                         ]}
                     >
-                        <DatePicker onChange={e => setEndDate(moment(e.$d).format(
+                        <DatePicker 
+                        disabledDate={endDay}
+                        disabled={chooseDate}
+                        onChange={e => setEndDate(moment(e.$d).format(
                             "MMM D, YYYY"
                         ))} />
                     </Form.Item>
@@ -267,8 +283,8 @@ function Bootcamp() {
                     <Form.Item name="link" label="Event Url" 
                            rules={[
                             {
-                                required: online,
-                                message: "Please enter last name",
+                                type: 'url',
+                                message: "Please enter a correct url",
                             },
                         ]}
                     style={{ gridColumn: '2/3' }}>

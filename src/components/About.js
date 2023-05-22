@@ -24,7 +24,7 @@ function About() {
                         <br/>
                             I am one of three Africans and West Africa's only certified trainer in the global climate
                             competition - The ClimateLaunchpad. I have taught, coached, and mentored aspiring and budding
-                            enterpreneurs in Africa and Europe. My bootcamps and coaching sessions enable enterpreneurs
+                            enterpreneurs in Africa and Europe. My bootcamps and coaching sessions enable entrepreneurs
                             start and run successful businesses that targets any of the UN SDGs.
                         </p>
                     </div>
