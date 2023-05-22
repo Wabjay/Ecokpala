@@ -16,7 +16,7 @@ function Instruction() {
                         <div className="body">
                             <img src={Apply} alt="bootcamps" className="icon"/>
                             <h3 className="title">Apply</h3>
-                            <p className="subtitle">Hit the subscribe button on any plan of your choice under 'My Pricing" section below/Above, and complete the short form that follows.</p>
+                            <p className="subtitle">Hit the subscribe button on any plan of your choice under 'My Pricing" section below, and complete the short form that follows.</p>
                         </div>
                     </div>
                 </div>

@@ -10,7 +10,7 @@ function Header() {
             <span className="up">HI!</span>
             <span className="down">I am Emmanuel Okpala</span>
         </h1>
-        <p className="header-subtitle">I Help Aspiring and Budding entrepreneurs. Start Up Right.</p>
+        <p className="header-subtitle">I Help Aspiring and Budding entrepreneur. Start Up Right.</p>
     </div>
 </header>
   )

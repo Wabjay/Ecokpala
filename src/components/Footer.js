@@ -16,10 +16,10 @@ function Footer() {
                 Okpala</a>
         </p>
         <div className="social-links text-right m-auto ml-sm-auto">
-            <a href="https://www.facebook.com/emmacokpala" className="link"><img src={Facebook} alt="" /></a>
-            <a href="https://www.twitter.com/emmacokpala" className="link"><img src={Twitter} alt="" /></a>
-            <a href="https://www.instagram.com/emmacokpala" className="link"><img src={Instagram} alt="" /></a>
-            <a href="https://www.linkedin.com/in/emmacokpala " className="link"><img src={LinkedIn} alt="" /></a>
+            <a href="https://www.facebook.com/emmacokpala" target='_blank' className="link"><img src={Facebook} alt="" /></a>
+            <a href="https://www.twitter.com/emmacokpala" target='_blank' className="link"><img src={Twitter} alt="" /></a>
+            <a href="https://www.instagram.com/emmacokpala" target='_blank' className="link"><img src={Instagram} alt="" /></a>
+            <a href="https://www.linkedin.com/in/emmacokpala" target='_blank' className="link"><img src={LinkedIn} alt="" /></a>
         </div>
     </footer>
 </div>
