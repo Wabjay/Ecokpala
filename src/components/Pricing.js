@@ -112,7 +112,7 @@ function Pricing(props) {
             country: country,
             email: value.email
         }
-        // formData(fields)
+        formData(fields)
         console.log(fields)
     };
 
@@ -137,7 +137,7 @@ function Pricing(props) {
             country: country,
             email: value.email
         }
-        // formData(fields)
+        formData(fields)
         console.log(fields)
     };
 
@@ -163,7 +163,7 @@ function Pricing(props) {
             country: country,
             email: value.email
         }
-        // formData(fields)
+        formData(fields)
         console.log(fields)
     };
 
