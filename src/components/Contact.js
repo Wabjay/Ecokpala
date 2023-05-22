@@ -41,6 +41,7 @@ function Contact() {
                         style: {
                           marginTop: '20vh',
                         },
+                        duration: 1.5
                       });
                     console.log(fields)
                 })

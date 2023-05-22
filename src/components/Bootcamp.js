@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import '../App.css'
-import { Button, Form, Input, InputNumber, Select, Modal, DatePicker, message, notification, Spin } from 'antd'
+import { Button, Form, Input, InputNumber, Select, Modal, DatePicker, message, notification, Spin, Upload } from 'antd'
 import axios from 'axios'
 import moment from 'moment'
 import useMessage from 'antd/es/message/useMessage'
@@ -91,6 +91,7 @@ function Bootcamp() {
                         style: {
                           marginTop: '20vh',
                         },
+                        duration: 1.5,
                       });
                     setHire(false)
                     console.log(fields)
@@ -203,7 +204,7 @@ function Bootcamp() {
                             placeholder='Select event type'
                         >
                             <Option value="Bootcamp">Bootcamp</Option>
-                            <Option value="Incubator/Accelerator">Incubator/Acceleratore</Option>
+                            <Option value="Incubator/Accelerator">Incubator/Accelerator</Option>
                             <Option value="Hackathon/Ideathon">Hackathon/Ideathon</Option>
                             <Option value="Training/Workshops">Training/Workshops</Option>
                             <Option value="Seminars/Conference">Seminars/Conference</Option>
@@ -266,6 +267,7 @@ function Bootcamp() {
                         </Select>
                     </Form.Item>
 
+                  
                     <Form.Item name="address" label="Enter address" 
                            rules={[
                             {

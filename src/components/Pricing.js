@@ -51,23 +51,22 @@ function Pricing(props) {
 
 
 
-    const PitchFile = async (uploadPitchFile) => {
-        console.log(uploadPitchFile)
-        if (uploadPitchFile == null) return;
-        const imageRef = ref(storage, `files/${uploadPitchFile.name + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}`);
-        uploadBytes(imageRef, uploadPitchFile).then((snapshot) => {
+    useEffect(() => {
+        console.log(pitchFile)
+        if (pitchFile == null || pitchFile.status === "removed"  || pitchFile.name === undefined) return setPitchUpload("");
+        const imageRef = ref(storage, `files/${pitchFile.name + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}`);
+        uploadBytes(imageRef, pitchFile).then((snapshot) => {
             getDownloadURL(snapshot.ref).then((url) => {
                 setPitchUpload(url);
             });
         });
-    };
+    },[pitchFile]);
 
-
-    const CanvassFile = (uploadCanvassFile) => {
-        console.log(uploadCanvassFile)
-        if (uploadCanvassFile == null) return;
-        const imageRef = ref(storage, `files/${uploadCanvassFile.name + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}`);
-        uploadBytes(imageRef, uploadCanvassFile)
+    useEffect(() => {
+        console.log(canvassFile.name)
+        if (canvassFile == null || canvassFile.status === "removed" || canvassFile.name === undefined) return setCanvassUpload("");
+        const imageRef = ref(storage, `files/${canvassFile.name + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}`);
+        uploadBytes(imageRef, canvassFile)
             .then((snapshot) => {
                 getDownloadURL(snapshot.ref)
                     .then((url) => {
@@ -76,13 +75,15 @@ function Pricing(props) {
                     });
 
             });
-    }
+    },[canvassFile])
 
 
     const onReset = () => {
         form.resetFields();
         setCanvass(true)
         setPitch(true)
+        setCanvassFile({})
+        setPitchFile({})
     };
     const handleErrors = (response) => {
         if (!response.ok)
@@ -92,17 +93,16 @@ function Pricing(props) {
 
     // Lite Forms
     const liteForm = (value) => {
-        CanvassFile(canvassFile)
         console.log(canvassFile)
         liteForms(value)
     };
+
     const liteForms = (value) => {
         let fields = {
             firstname: value.firstname,
             lastname: value.lastname,
             company: value.company,
             canvass: value.canvass,
-            // "canvass-upload": canvassUpload ? canvassUpload : '',
             "canvass-upload": canvassUpload ? canvassUpload : '',
             stage: value.stage,
             plan: value.lite,
@@ -113,13 +113,11 @@ function Pricing(props) {
             email: value.email
         }
         formData(fields)
-        console.log(fields, canvassUpload)
+        console.log(fields)
     };
 
     // Basic Form
     const basicForm = (value) => {
-        CanvassFile(canvassFile)
-        PitchFile(pitchFile)
         basicForms(value)
     };
     const basicForms = (value) => {
@@ -145,8 +143,6 @@ function Pricing(props) {
 
     // Pro forms
     const proForm = (value) => {
-        CanvassFile(canvassFile)
-        PitchFile(pitchFile)
         proForms(value)
     };
     const proForms = (value) => {
@@ -197,6 +193,7 @@ function Pricing(props) {
                         style: {
                             marginTop: '20vh',
                         },
+                        duration: 1.5,
                     });
                     setPitchUpload("")
                     setCanvassUpload("")
@@ -435,17 +432,17 @@ function Pricing(props) {
                                 },
                             ]}>
                             <Upload
-                                onChange={(e) => (setCanvassFile(e.file.originFileObj))}
-                                maxCount={1}
-                                listType="picture"
-                                size={100}
-                            //   beforeUpload={() => false}
+                            name="canvassUpload"
+                            maxCount={1}
+                            listType="picture"
+                            beforeUpload={() =>{ return false}}
                             // className="avatar-uploader"
+                            onChange={(e) => (setCanvassFile(e.file))}
                             >
                                 <Button disabled={canvass}>Upload Canvass</Button>
                             </Upload>
                         </Form.Item>
-
+                       
                         <Form.Item name="expectations"
                             label="Expectations" style={{ gridColumn: '1/3' }}>
                             <TextArea rows={4} placeholder="What are your expectations" />
@@ -620,10 +617,10 @@ function Pricing(props) {
                                 },
                             ]}>
                             <Upload name="canvassUpload"
-                                onChange={(e) => (setCanvassFile(e.file.originFileObj))}
+                                onChange={(e) => (setCanvassFile(e.file))}
                                 maxCount={1}
                                 listType="picture"
-                            //   beforeUpload={() => false}
+                              beforeUpload={() => false}
                             // className="avatar-uploader"
                             >
                                 <Button disabled={canvass}>Upload Canvass</Button>
@@ -660,10 +657,10 @@ function Pricing(props) {
                                 },
                             ]}>
                             <Upload name="pitchUpload"
-                                onChange={(e) => (setPitchFile(e.file.originFileObj))}
+                                onChange={(e) => (setPitchFile(e.file))}
                                 maxCount={1}
                                 listType="picture"
-                            //   beforeUpload={() => false}
+                              beforeUpload={() => false}
                             // className="avatar-uploader"
                             >
                                 <Button disabled={pitch}> Upload pitch deck</Button>
@@ -844,11 +841,11 @@ function Pricing(props) {
                                 },
                             ]}>
                             <Upload name="canvassUpload"
-                                onChange={(e) => (setCanvassFile(e.file.originFileObj))}
+                                onChange={(e) => (setCanvassFile(e.file))}
                                 maxCount={1}
                                 listType="picture"
                                 onRemove={canvass}
-                            //   beforeUpload={() => false}
+                              beforeUpload={() => false}
                             // className="avatar-uploader"
                             >
                                 <Button disabled={canvass}>Upload Canvass</Button>
@@ -884,11 +881,11 @@ function Pricing(props) {
                                 },
                             ]}>
                             <Upload name="pitchUpload"
-                                onChange={(e) => (setPitchFile(e.file.originFileObj))}
+                                onChange={(e) => (setPitchFile(e.file))}
                                 maxCount={1}
                                 listType="picture"
                                 onRemove={pitch}
-                            //   beforeUpload={() => false}
+                              beforeUpload={() => false}
                             // className="avatar-uploader"
                             >
                                 <Button disabled={pitch}> Upload pitch deck</Button>
