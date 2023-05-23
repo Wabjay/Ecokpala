@@ -42,6 +42,7 @@ function Pricing(props) {
     const [pitchFile, setPitchFile] = useState({})
     const [canvass, setCanvass] = useState(true)
     const [pitch, setPitch] = useState(true)
+    const [refId, setRefId] = useState(undefined)
 
     // SCRIPT TO UPLOAD IMAGE TO CLOUDINARY
     const [canvassUpload, setCanvassUpload] = useState("")
@@ -52,20 +53,21 @@ function Pricing(props) {
 
 
     useEffect(() => {
-        console.log(pitchFile)
-        if (pitchFile == null || pitchFile.status === "removed"  || pitchFile.name === undefined || pitch) return setPitchUpload("");
-        const imageRef = ref(storage, `files/${pitchFile.name + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}`);
+        if (pitchFile == null || pitchFile.status === "removed"  || pitchFile.name === undefined || pitch) return (setPitchUpload(""));
+        console.log(pitchFile, refId)
+        const imageRef = ref(storage, `files/${refId + pitchFile.name}`);
         uploadBytes(imageRef, pitchFile).then((snapshot) => {
             getDownloadURL(snapshot.ref).then((url) => {
                 setPitchUpload(url);
+                console.log(url)
             });
         });
     },[pitchFile, pitch]);
 
     useEffect(() => {
-        console.log(canvassFile.name)
-        if (canvassFile == null || canvassFile.status === "removed" || canvassFile.name === undefined || canvass) return setCanvassUpload("");
-        const imageRef = ref(storage, `files/${canvassFile.name + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}`);
+        if (canvassFile == null || canvassFile.status === "removed" || canvassFile.name === undefined || canvass) return (setCanvassUpload(""));
+        console.log(canvassFile, refId)
+        const imageRef = ref(storage, `files/${refId + canvassFile.name}`);
         uploadBytes(imageRef, canvassFile)
             .then((snapshot) => {
                 getDownloadURL(snapshot.ref)
@@ -84,6 +86,7 @@ function Pricing(props) {
         setPitch(true)
         setCanvassFile({})
         setPitchFile({})
+        setRefId(undefined)
     };
     const handleErrors = (response) => {
         if (!response.ok)
@@ -93,7 +96,6 @@ function Pricing(props) {
 
     // Lite Forms
     const liteForm = (value) => {
-        console.log(canvassFile)
         liteForms(value)
     };
 
@@ -107,7 +109,7 @@ function Pricing(props) {
             stage: value.stage,
             plan: value.lite,
             expectations: value.expectations,
-            reference: value.lite + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }),
+            reference: refId === undefined ? value.lite + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }) : refId,
             bill: 30,
             country: country,
             email: value.email
@@ -119,6 +121,7 @@ function Pricing(props) {
     // Basic Form
     const basicForm = (value) => {
         basicForms(value)
+
     };
     const basicForms = (value) => {
         let fields = {
@@ -132,7 +135,7 @@ function Pricing(props) {
             stage: value.stage,
             plan: value.basic,
             expectations: value.expectations,
-            reference: value.basic + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }),
+            reference: refId === undefined ? value.lite + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }) : refId,
             bill: 81,
             country: country,
             email: value.email
@@ -144,6 +147,7 @@ function Pricing(props) {
     // Pro forms
     const proForm = (value) => {
         proForms(value)
+
     };
     const proForms = (value) => {
         let fields = {
@@ -158,7 +162,7 @@ function Pricing(props) {
             plan: value.pro,
             expectations: value.expectations,
             others: value.others,
-            reference: value.pro + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }),
+            reference: refId === undefined ? value.lite + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }) : refId,
             bill: 1500,
             country: country,
             email: value.email
@@ -201,6 +205,7 @@ function Pricing(props) {
                     setLite(false)
                     setBasic(false)
                     setPro(false)
+                    setRefId(undefined)
                     console.log(fields)
                 })
                 .catch((error) => {
@@ -436,8 +441,10 @@ function Pricing(props) {
                             maxCount={1}
                             listType="picture"
                             beforeUpload={() =>{ return false}}
-                            // className="avatar-uploader"
-                            onChange={(e) => (setCanvassFile(e.file))}
+                            onChange={(e) => (
+                                setCanvassFile(e.file),
+                                refId === undefined && setRefId('lite' + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }))
+                                )}
                             >
                                 <Button disabled={canvass}>Upload Canvass</Button>
                             </Upload>
@@ -602,7 +609,6 @@ function Pricing(props) {
                                 onChange={(e: RadioChangeEvent) => {
                                     e.target.value === "yes" ? setCanvass(false) : setCanvass(true)
                                 }}
-                                value={canvass}
                             >
                                 <Radio value="yes">Yes</Radio>
                                 <Radio value="no" >No</Radio>
@@ -610,18 +616,21 @@ function Pricing(props) {
                         </Form.Item>
                         <Form.Item
                             label="Upload Business Model Canvass"
+                            name="basicCanvass"
                             rules={[
                                 {
                                     required: !canvass,
                                     message: "Upload Business Model Canvass",
                                 },
                             ]}>
-                            <Upload name="canvassUpload"
-                                onChange={(e) => (setCanvassFile(e.file))}
+                            <Upload 
+                                name="basicCanvass"
                                 maxCount={1}
                                 listType="picture"
                               beforeUpload={() => false}
-                            // className="avatar-uploader"
+                              onChange={(e) => (setCanvassFile(e.file),
+                                refId === undefined && setRefId('basic' + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }))
+                                )}
                             >
                                 <Button disabled={canvass}>Upload Canvass</Button>
                             </Upload>
@@ -641,7 +650,6 @@ function Pricing(props) {
                                 onChange={(e: RadioChangeEvent) => {
                                     e.target.value === "yes" ? setPitch(false) : setPitch(true)
                                 }}
-                                value={pitch}
                             >
                                 <Radio value="yes">Yes</Radio>
                                 <Radio value="no" >No</Radio>
@@ -649,7 +657,7 @@ function Pricing(props) {
                         </Form.Item>
                         <Form.Item
                             label="Upload pitch deck"
-
+                                name="basicPitch"
                             rules={[
                                 {
                                     required: !pitch,
@@ -657,7 +665,9 @@ function Pricing(props) {
                                 },
                             ]}>
                             <Upload name="pitchUpload"
-                                onChange={(e) => (setPitchFile(e.file))}
+                                onChange={(e) => (setPitchFile(e.file),
+                                refId === undefined && setRefId('basic' + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }))
+                                )}
                                 maxCount={1}
                                 listType="picture"
                               beforeUpload={() => false}
@@ -827,7 +837,6 @@ function Pricing(props) {
                                 onChange={(e: RadioChangeEvent) => {
                                     e.target.value === "yes" ? setCanvass(false) : setCanvass(true)
                                 }}
-                                value={canvass}
                             >
                                 <Radio value="yes">Yes</Radio>
                                 <Radio value="no" >No</Radio>
@@ -835,14 +844,17 @@ function Pricing(props) {
                         </Form.Item>
                         <Form.Item
                             label="Upload Business Model Canvass"
+                            name="proCanvass"
                             rules={[
                                 {
                                     required: !canvass,
                                     message: "Upload Business Model Canvass",
                                 },
                             ]}>
-                            <Upload name="canvassUpload"
-                                onChange={(e) => (setCanvassFile(e.file))}
+                            <Upload name="proCanvass"
+                                onChange={(e) => (setCanvassFile(e.file),
+                                refId === undefined && setRefId('pro' + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }))
+                                )}
                                 maxCount={1}
                                 listType="picture"
                               beforeUpload={() => false}
@@ -865,7 +877,6 @@ function Pricing(props) {
                                 onChange={(e: RadioChangeEvent) => {
                                     e.target.value === "yes" ? setPitch(false) : setPitch(true)
                                 }}
-                                value={pitch}
                             >
                                 <Radio value="yes">Yes</Radio>
                                 <Radio value="no" >No</Radio>
@@ -873,15 +884,17 @@ function Pricing(props) {
                         </Form.Item>
                         <Form.Item
                             label="Upload pitch deck"
-
+                            name="proPitch"
                             rules={[
                                 {
                                     required: !pitch,
                                     message: "Upload pitch deck",
                                 },
                             ]}>
-                            <Upload name="pitchUpload"
-                                onChange={(e) => (setPitchFile(e.file))}
+                            <Upload name="proPitch"
+                                onChange={(e) => (setPitchFile(e.file),
+                                refId === undefined && setRefId('pro' + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }))
+                                )}
                                 maxCount={1}
                                 listType="picture"
                               beforeUpload={() => false}

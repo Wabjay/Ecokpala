@@ -26,7 +26,6 @@ function Bootcamp() {
         form.resetFields();
     };
     const startDay = (current) => {
-        // Can not select days before today and today
         setChooseDate(false)
         return current && current < moment();
       };

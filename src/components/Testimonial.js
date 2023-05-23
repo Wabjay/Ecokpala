@@ -12,7 +12,7 @@ function Testimonial() {
             <h6 className="section-title mb-6">Testmonial</h6>
 
             <div className="row">
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3 ">
                     <div className="testimonial-card">
                         <div className="testimonial-card-img-holder">
                             <img src={Avatar2} className="testimonial-card-img"
@@ -30,7 +30,7 @@ function Testimonial() {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3 ">
                     <div className="testimonial-card">
                         <div className="testimonial-card-img-holder">
                             <img src={Avatar3} className="testimonial-card-img"
