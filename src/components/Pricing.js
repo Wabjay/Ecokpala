@@ -109,12 +109,12 @@ function Pricing(props) {
             stage: value.stage,
             plan: value.lite,
             expectations: value.expectations,
-            reference: refId === undefined ? value.lite + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }) : refId,
+            reference: refId === undefined ? `${value.lite}${randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}` : refId,
             bill: 30,
             country: country,
             email: value.email
         }
-        formData(fields)
+        // formData(fields)
         console.log(fields)
     };
 
@@ -135,7 +135,7 @@ function Pricing(props) {
             stage: value.stage,
             plan: value.basic,
             expectations: value.expectations,
-            reference: refId === undefined ? value.lite + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }) : refId,
+            reference: refId === undefined ? `${value.basic}${randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}` : refId,
             bill: 81,
             country: country,
             email: value.email
@@ -162,7 +162,7 @@ function Pricing(props) {
             plan: value.pro,
             expectations: value.expectations,
             others: value.others,
-            reference: refId === undefined ? value.lite + randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' }) : refId,
+            reference: refId === undefined ? `${value.pro}${randomstring.generate({ length: 12, charset: '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ' })}` : refId,
             bill: 1500,
             country: country,
             email: value.email
