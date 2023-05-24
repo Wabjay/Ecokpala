@@ -43,7 +43,8 @@ function Pricing(props) {
     const [canvass, setCanvass] = useState(true)
     const [pitch, setPitch] = useState(true)
     const [refId, setRefId] = useState(undefined)
-
+    const [send, setSend] = useState(false)
+    const [field, setField] = useState({})
     // SCRIPT TO UPLOAD IMAGE TO CLOUDINARY
     const [canvassUpload, setCanvassUpload] = useState("")
     const [pitchUpload, setPitchUpload] = useState("")
@@ -53,19 +54,22 @@ function Pricing(props) {
 
 
     useEffect(() => {
-        if (pitchFile == null || pitchFile.status === "removed"  || pitchFile.name === undefined || pitch) return (setPitchUpload(""));
+        setLoading(true)
+        if (pitchFile == null || pitchFile.status === "removed"  || pitchFile.name === undefined || pitch) return (setPitchUpload(""), setLoading(false));
         console.log(pitchFile, refId)
         const imageRef = ref(storage, `files/${refId + pitchFile.name}`);
         uploadBytes(imageRef, pitchFile).then((snapshot) => {
             getDownloadURL(snapshot.ref).then((url) => {
                 setPitchUpload(url);
+                setLoading(false)
                 console.log(url)
             });
         });
     },[pitchFile, pitch]);
 
     useEffect(() => {
-        if (canvassFile == null || canvassFile.status === "removed" || canvassFile.name === undefined || canvass) return (setCanvassUpload(""));
+        setLoading(true)
+        if (canvassFile == null || canvassFile.status === "removed" || canvassFile.name === undefined || canvass) return (setCanvassUpload(""), setLoading(false));
         console.log(canvassFile, refId)
         const imageRef = ref(storage, `files/${refId + canvassFile.name}`);
         uploadBytes(imageRef, canvassFile)
@@ -73,6 +77,7 @@ function Pricing(props) {
                 getDownloadURL(snapshot.ref)
                     .then((url) => {
                         setCanvassUpload(url);
+                        setLoading(false)
                         console.log(url)
                     });
 
@@ -87,12 +92,90 @@ function Pricing(props) {
         setCanvassFile({})
         setPitchFile({})
         setRefId(undefined)
+        setSend(false)
+        setField({})
     };
-    const handleErrors = (response) => {
-        if (!response.ok)
-            throw Error(response.statusText);
-        return response;
-    }
+    
+    useEffect(() => {
+        if (field.plan === "lite") {
+            if (canvassUpload === "" && !canvass) {
+                send && console.log("Please upload a canvass")
+                setSend(false)
+                send && messageApi.open({
+                    type: 'error',
+                    content: 'Please upload your canvass.',
+                    className: 'custom-class',
+                    duration: 1.5,
+                    style: {
+                        marginTop: '20vh',
+                    },
+                });
+            } else if (canvassUpload !== "" && !canvass) {
+                send && console.log(JSON.stringify(field));
+                setSend(false)
+                send && formData(field)
+            } else if (canvassUpload === "" && canvass) {
+                send && console.log(JSON.stringify(field));
+                setSend(false)
+                send && formData(field)
+            }
+        }
+    }, [!send])
+ 
+ 
+ // FOR BASIC AND PRO
+     useEffect(() => {
+         if (field.plan === "basic" || field.plan === "pro") {
+             console.log(send)
+             if ((pitchUpload === "" && !pitch && canvassUpload === "" && !canvass)) {
+                 send && console.log("Please upload your canvass and pitch")
+                 setSend(false)
+                 send &&  messageApi.open({
+                     type: 'error',
+                     content: 'Please upload your canvass and pitch.',
+                     className: 'custom-class',
+                     duration: 1.5,
+                     style: {
+                         marginTop: '20vh',
+                     },
+                 });
+             } else if (canvassUpload === "" && !canvass) {
+                 send && console.log("loading: " + JSON.stringify(canvassFile));
+                 setSend(false)
+                 send &&  messageApi.open({
+                    type: 'error',
+                    content: 'Please upload your canvass.',
+                    className: 'custom-class',
+                    duration: 1.5,
+                    style: {
+                        marginTop: '20vh',
+                    },
+                });
+             } else if (pitchUpload === "" && !pitch) {
+                 send && console.log("loading: " + JSON.stringify(pitchFile));
+                 setSend(false)
+                 send &&  messageApi.open({
+                    type: 'error',
+                    content: 'Please upload your pitch.',
+                    className: 'custom-class',
+                    duration: 1.5,
+                    style: {
+                        marginTop: '20vh',
+                    },
+                });
+             }else if (canvassUpload !== "" && !canvass && pitchUpload !== "" && !pitch) {
+                     send && console.log(JSON.stringify(field));
+                     setSend(false)
+                     send && formData(field)
+             }
+             else {
+                 send && console.log(JSON.stringify(field));
+                 setSend(false)
+                 send && formData(field)
+             }
+         }
+     }, [send])
+ 
 
     // Lite Forms
     const liteForm = (value) => {
@@ -114,8 +197,8 @@ function Pricing(props) {
             country: country,
             email: value.email
         }
-        // formData(fields)
-        console.log(fields)
+        setSend(true)
+        setField(fields)
     };
 
     // Basic Form
@@ -140,8 +223,8 @@ function Pricing(props) {
             country: country,
             email: value.email
         }
-        formData(fields)
-        console.log(fields)
+        setSend(true)
+        setField(fields)
     };
 
     // Pro forms
@@ -167,8 +250,8 @@ function Pricing(props) {
             country: country,
             email: value.email
         }
-        formData(fields)
-        console.log(fields)
+        setSend(true)
+        setField(fields)
     };
 
 
